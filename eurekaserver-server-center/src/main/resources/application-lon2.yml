@@ -1,0 +1,17 @@
+server:
+  port: 8762
+
+eureka:
+  instance:
+    hostname: lon2
+  client:
+    registerWithEureka: true # 注册中心之间的相互注册实现到高可用
+    fetchRegistry: true # 注册中心之间的相互注册实现到高可用
+    serviceUrl:
+      defaultZone: http://lon1:8761/eureka/,http://lon3:8763/eureka/
+  server:
+    enable-self-preservation: false
+
+spring:
+  application:
+    name: eureka-server
