@@ -1,7 +1,6 @@
 package com.study.demo.order.service;
 
-import com.alibaba.fastjson.JSONObject;
-
+import com.study.demo.order.domain.Order;
 import java.util.List;
 
 /**
@@ -16,5 +15,12 @@ public interface OrderService {
      * @param userId 用户ID
      * @return
      */
-    List<JSONObject> findUserAllOrderInfo(Long userId);
+    List<Order> findUserAllOrderInfo(Long userId);
+
+    /**
+     * 下单
+     * @param order
+     * @return
+     */
+    int createOrder(Order order);
 }

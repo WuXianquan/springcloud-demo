@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: order-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/springcloud_demo?charset=utf8mb4&useSSL=falseu
+    username: root
+    password: 123
 
 eureka:
   client:
