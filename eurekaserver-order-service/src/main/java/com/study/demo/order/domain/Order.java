@@ -1,6 +1,8 @@
 package com.study.demo.order.domain;
 
 import lombok.Data;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
@@ -11,7 +13,9 @@ import java.util.List;
  * @Description: 订单类
  */
 @Data
+@Entity(name = "t_order")
 public class Order {
+    @Id
     private Long id;
     private String username;
     private Integer orderStatus;

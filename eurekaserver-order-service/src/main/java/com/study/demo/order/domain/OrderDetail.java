@@ -1,6 +1,8 @@
 package com.study.demo.order.domain;
 
 import lombok.Data;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 
 /**
@@ -9,7 +11,9 @@ import java.math.BigDecimal;
  * @Description: 订单明细
  */
 @Data
+@Entity(name = "t_oder_detail")
 public class OrderDetail {
+    @Id
     private Long id;
     private Long orderId;
     private Long productId;

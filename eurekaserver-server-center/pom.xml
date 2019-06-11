@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.study.demo</groupId>
-    <artifactId>eurekaserver-demo</artifactId>
+    <artifactId>eurekaserver-server-center</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 

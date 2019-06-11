@@ -22,5 +22,5 @@ public interface OrderService {
      * @param order
      * @return
      */
-    int createOrder(Order order);
+    Order createOrder(Order order);
 }

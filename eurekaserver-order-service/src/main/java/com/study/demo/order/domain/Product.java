@@ -1,6 +1,8 @@
 package com.study.demo.order.domain;
 
 import lombok.Data;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -10,7 +12,9 @@ import java.sql.Timestamp;
  * @Description: 商品类
  */
 @Data
+@Entity(name = "t_product")
 public class Product {
+    @Id
     private Long id;
     private String name;
     private BigDecimal price;

@@ -13,8 +13,8 @@ create table t_product(
 	id bigint not null,
 	name varchar(255) not null,
 	price bigint not null,
-	stock bigint not null,
-	frozen_stock bigint not null,
+	stock bigint null default 0,
+	frozen_stock bigint null default 0,
 	status tinyint not null,
 	create_time timestamp default current_timestamp,
 	PRIMARY KEY (`id`)

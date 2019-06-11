@@ -1,6 +1,7 @@
 package com.study.demo.order.service;
 
 import com.study.demo.order.domain.Product;
+
 import java.util.List;
 
 /**
@@ -13,4 +14,26 @@ public interface ProductService {
     List<Product> findProductList();
 
     Product findProductById(Long productId);
+
+    Product createProduct(Product product);
+
+    Product updateProduct(Product product);
+
+    /**
+     * 预扣商品库存
+     *
+     * @param productId 商品ID
+     * @param amount    预扣数量
+     * @return
+     */
+    int reduceProductStock(Long productId, Long amount);
+
+    /**
+     * 预充商品库存
+     *
+     * @param productId
+     * @param amount
+     * @return
+     */
+    int addProductStock(Long productId, Long amount);
 }

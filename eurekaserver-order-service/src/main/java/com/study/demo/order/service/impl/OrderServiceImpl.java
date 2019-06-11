@@ -5,8 +5,11 @@ import com.common.util.IDGenerator;
 import com.study.demo.order.domain.Order;
 import com.study.demo.order.domain.OrderDetail;
 import com.study.demo.order.domain.Product;
+import com.study.demo.order.enums.OderStatusEnum;
 import com.study.demo.order.enums.OrderExceptionEnum;
 import com.study.demo.order.enums.ProductStatusEnum;
+import com.study.demo.order.repository.OrderRepository;
+import com.study.demo.order.service.OrderDetailService;
 import com.study.demo.order.service.OrderService;
 import com.study.demo.order.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +28,13 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
 
     @Autowired
+    private OrderRepository orderRepository;
+
+    @Autowired
     private ProductService productService;
+
+    @Autowired
+    private OrderDetailService orderDetailService;
 
     @Override
     public List<Order> findUserAllOrderInfo(Long useId) {
@@ -34,10 +43,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public int createOrder(Order order) {
+    public Order createOrder(Order order) {
         long orderId = IDGenerator.getInstance().next();
 
         // 检查商品
+        BigDecimal totalAmount = new BigDecimal(0);
         List<OrderDetail> detailListList = order.getDetailListList();
         for (OrderDetail detail : detailListList) {
             long productId = detail.getProductId();
@@ -49,21 +59,38 @@ public class OrderServiceImpl implements OrderService {
             if (product.getStatus() != ProductStatusEnum.on_line.getCode()) {
                 throw new ServiceException(OrderExceptionEnum.product_no_sell.getCode(), OrderExceptionEnum.product_no_sell.getMsg());
             }
-            if (productNumber > product.getStock()) {
-                throw new ServiceException(OrderExceptionEnum.product_no_enough.getCode(), OrderExceptionEnum.product_no_enough.getMsg());
-            }
 
-            // TODO 扣库存
+            // 预扣库存(订单完成之后预补回来)
+            int ret = productService.reduceProductStock(productId, productNumber);
+            if (ret != 1) {
+                throw new ServiceException(OrderExceptionEnum.product_amount_error.getCode(), OrderExceptionEnum.product_amount_error.getMsg());
+            }
+            // 计算明细
             long detailId = IDGenerator.getInstance().next();
             BigDecimal amount = product.getPrice().multiply(new BigDecimal(detail.getProductNumber()));
             detail.setId(detailId);
             detail.setOrderId(orderId);
             detail.setProductPrice(product.getPrice());
             detail.setAmount(amount);
+            totalAmount.add(amount);
         }
-
-        // TODO 新增订单
+        // 保存订单明细
+        List<OrderDetail> list = orderDetailService.createOrderDetailList(detailListList);
+        if (list == null) {
+            throw new ServiceException("下单失败");
+        }
+        // 保存订单
         order.setId(orderId);
-        return 0;
+        order.setUsername(order.getUsername());
+        order.setOrderAmount(totalAmount);
+        order.setOrderStatus(OderStatusEnum.NEW.getCode());
+        order.setDetailListList(detailListList);
+        Order o = orderRepository.save(order);
+        if (o == null) {
+            throw new ServiceException("下单失败");
+        }
+        // TODO 支付
+        // TODO 实扣库存
+        return o;
     }
 }
