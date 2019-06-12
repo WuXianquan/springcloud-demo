@@ -8,7 +8,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/springcloud_demo?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: root
-    password: 123456
+    password: 123
+  jpa:
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
 
 eureka:
   client:

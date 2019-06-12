@@ -1,5 +1,6 @@
 package com.study.demo.order.service.impl;
 
+import com.common.util.IDGenerator;
 import com.study.demo.order.domain.OrderDetail;
 import com.study.demo.order.repository.OrderDetailRepository;
 import com.study.demo.order.service.OrderDetailService;
@@ -26,16 +27,20 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public List<OrderDetail> findOrderDetailListByOrderId(Long orderId) {
-        return null;
+        return orderDetailRepository.findOrderDetailListByOrderId(orderId);
     }
 
     @Override
     public OrderDetail createOrderDetail(OrderDetail orderDetail) {
+        orderDetail.setId(IDGenerator.getInstance().next());
         return orderDetailRepository.save(orderDetail);
     }
 
     @Override
     public List<OrderDetail> createOrderDetailList(List<OrderDetail> orderDetailList) {
+        for (OrderDetail orderDetail : orderDetailList) {
+            orderDetail.setId(IDGenerator.getInstance().next());
+        }
         return orderDetailRepository.saveAll(orderDetailList);
     }
 }

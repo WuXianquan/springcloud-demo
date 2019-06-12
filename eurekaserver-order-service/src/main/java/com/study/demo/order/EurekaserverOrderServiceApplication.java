@@ -15,5 +15,4 @@ public class EurekaserverOrderServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(EurekaserverOrderServiceApplication.class, args);
     }
-
 }

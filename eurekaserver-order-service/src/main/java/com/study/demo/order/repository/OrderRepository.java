@@ -2,7 +2,10 @@ package com.study.demo.order.repository;
 
 import com.study.demo.order.domain.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * @Author: Lon
@@ -11,4 +14,7 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
+
+    @Query(value = "select o from t_order o where o.userId = ?1")
+    List<Order> findUserAllOrderInfo(Long userId);
 }

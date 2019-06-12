@@ -5,7 +5,7 @@ import com.common.util.IDGenerator;
 import com.study.demo.order.domain.Order;
 import com.study.demo.order.domain.OrderDetail;
 import com.study.demo.order.domain.Product;
-import com.study.demo.order.enums.OderStatusEnum;
+import com.study.demo.order.enums.OrderStatusEnum;
 import com.study.demo.order.enums.OrderExceptionEnum;
 import com.study.demo.order.enums.ProductStatusEnum;
 import com.study.demo.order.repository.OrderRepository;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,8 +37,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> findUserAllOrderInfo(Long useId) {
-        List<Order> list = new ArrayList<>();
-        return list;
+        return orderRepository.findUserAllOrderInfo(useId);
     }
 
     @Override
@@ -56,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
             if (product == null) {
                 throw new ServiceException(OrderExceptionEnum.product_no_exits.getCode(), OrderExceptionEnum.product_no_exits.getMsg());
             }
-            if (product.getStatus() != ProductStatusEnum.on_line.getCode()) {
+            if (product.getStatus().intValue() != ProductStatusEnum.on_line.getCode().intValue()) {
                 throw new ServiceException(OrderExceptionEnum.product_no_sell.getCode(), OrderExceptionEnum.product_no_sell.getMsg());
             }
 
@@ -72,7 +70,7 @@ public class OrderServiceImpl implements OrderService {
             detail.setOrderId(orderId);
             detail.setProductPrice(product.getPrice());
             detail.setAmount(amount);
-            totalAmount.add(amount);
+            totalAmount = totalAmount.add(amount);
         }
         // 保存订单明细
         List<OrderDetail> list = orderDetailService.createOrderDetailList(detailListList);
@@ -81,16 +79,14 @@ public class OrderServiceImpl implements OrderService {
         }
         // 保存订单
         order.setId(orderId);
-        order.setUsername(order.getUsername());
+        order.setUserId(order.getUserId());
         order.setOrderAmount(totalAmount);
-        order.setOrderStatus(OderStatusEnum.NEW.getCode());
+        order.setOrderStatus(OrderStatusEnum.NEW.getCode());
         order.setDetailListList(detailListList);
-        Order o = orderRepository.save(order);
-        if (o == null) {
-            throw new ServiceException("下单失败");
-        }
+        orderRepository.save(order);
+
         // TODO 支付
         // TODO 实扣库存
-        return o;
+        return order;
     }
 }

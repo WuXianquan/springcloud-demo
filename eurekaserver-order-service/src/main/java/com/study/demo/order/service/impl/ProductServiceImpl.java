@@ -1,12 +1,14 @@
 package com.study.demo.order.service.impl;
 
 import com.common.exception.ServiceException;
+import com.common.util.IDGenerator;
 import com.study.demo.order.domain.Product;
 import com.study.demo.order.enums.OrderExceptionEnum;
 import com.study.demo.order.repository.ProductRepository;
 import com.study.demo.order.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 /**
@@ -32,6 +34,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product createProduct(Product product) {
+        product.setId(IDGenerator.getInstance().next());
         return productRepository.save(product);
     }
 
@@ -43,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int reduceProductStock(Long productId, Long amount) {
         Product product = productRepository.getOne(productId);
-        if (product == null){
+        if (product == null) {
             throw new ServiceException(OrderExceptionEnum.product_no_exits.getCode(), OrderExceptionEnum.product_no_exits.getMsg());
         }
         if (product.getStock().longValue() < amount.longValue()) {
@@ -55,7 +58,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public int addProductStock(Long productId, Long amount) {
         Product product = productRepository.getOne(productId);
-        if (product == null){
+        if (product == null) {
             throw new ServiceException(OrderExceptionEnum.product_no_exits.getCode(), OrderExceptionEnum.product_no_exits.getMsg());
         }
         if (product.getFrozenStock().longValue() < amount.longValue()) {

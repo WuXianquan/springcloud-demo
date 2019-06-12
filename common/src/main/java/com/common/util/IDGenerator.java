@@ -113,7 +113,7 @@ public class IDGenerator {
      */
     private long lastTimestamp = -1L;
 
-    private static IDGenerator instance;
+    private static volatile IDGenerator instance;
 
     public static final String YYMMDD = "yyMMdd";
 
@@ -142,7 +142,6 @@ public class IDGenerator {
      * @return
      */
     public static IDGenerator getInstance(long workerId, long dataCenterId) {
-
         if (instance != null) {
             return instance;
         }
@@ -157,11 +156,6 @@ public class IDGenerator {
         return instance;
     }
 
-    /**
-     * @param workerId     工作ID (0~31)
-     * @param dataCenterId 数据中心ID (0~31)
-     * @return
-     */
     public static IDGenerator getInstance() {
         long dataCenterId = getDatacenterId(maxDataCenterId);
         long workerId = getMaxWorkerId(dataCenterId, maxWorkerId);
@@ -222,7 +216,7 @@ public class IDGenerator {
         StringBuffer sb = new StringBuffer();
         sb.append(format.format(new Date()));
         sb.append(next());
-        return Long.valueOf(sb.toString());
+        return Long.parseLong(sb.toString());
     }
 
     /**
@@ -292,11 +286,5 @@ public class IDGenerator {
         } catch (Exception e) {
         }
         return id;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(IDGenerator.getInstance().next());
-        System.out.println(IDGenerator.getInstance().next());
-        System.out.println(IDGenerator.getInstance().next());
     }
 }

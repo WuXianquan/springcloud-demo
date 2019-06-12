@@ -10,7 +10,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum  OderStatusEnum {
+public enum OrderStatusEnum {
 
     NEW(0, "已下单");
 

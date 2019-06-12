@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
-    @Query(value = "update t_product set stock = stock - :amount, frozen_stock = frozen_stock + :amount where id = :id and stock > amount")
+    @Query(value = "update t_product set stock = stock - :amount, frozen_stock = frozen_stock + :amount where id = :id and stock > :amount")
     int reduceProductStock(@Param("id") Long productId, @Param("amount") Long amount);
 
     @Modifying
