@@ -1,6 +1,6 @@
 package com.study.demo.order.service;
 
-import com.study.demo.order.domain.Product;
+import com.common.domain.Product;
 
 import java.util.List;
 
@@ -21,7 +21,6 @@ public interface ProductService {
 
     /**
      * 预扣商品库存
-     *
      * @param productId 商品ID
      * @param amount    预扣数量
      * @return
@@ -30,7 +29,6 @@ public interface ProductService {
 
     /**
      * 预充商品库存
-     *
      * @param productId
      * @param amount
      * @return

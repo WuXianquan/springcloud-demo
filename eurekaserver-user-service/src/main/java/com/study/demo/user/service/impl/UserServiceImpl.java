@@ -1,10 +1,7 @@
 package com.study.demo.user.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.study.demo.user.service.UserService;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @Author: Lon
@@ -13,9 +10,4 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl implements UserService {
-
-    @Override
-    public List<JSONObject> findUserAllOrderInfo(Long useId) {
-        return null;
-    }
 }

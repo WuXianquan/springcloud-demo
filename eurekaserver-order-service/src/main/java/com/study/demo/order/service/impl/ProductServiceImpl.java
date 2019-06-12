@@ -1,9 +1,9 @@
 package com.study.demo.order.service.impl;
 
+import com.common.domain.Product;
+import com.common.enums.OrderExceptionEnum;
 import com.common.exception.ServiceException;
 import com.common.util.IDGenerator;
-import com.study.demo.order.domain.Product;
-import com.study.demo.order.enums.OrderExceptionEnum;
 import com.study.demo.order.repository.ProductRepository;
 import com.study.demo.order.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;

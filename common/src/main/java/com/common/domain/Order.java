@@ -1,4 +1,4 @@
-package com.study.demo.order.domain;
+package com.common.domain;
 
 import lombok.Getter;
 import lombok.Setter;

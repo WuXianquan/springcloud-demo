@@ -1,6 +1,6 @@
 package com.study.demo.order.repository;
 
-import com.study.demo.order.domain.Order;
+import com.common.domain.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

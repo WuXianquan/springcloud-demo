@@ -1,6 +1,6 @@
 package com.study.demo.order.controller;
 
-import com.study.demo.order.domain.Order;
+import com.common.domain.Order;
 import com.study.demo.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

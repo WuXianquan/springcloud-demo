@@ -10,9 +10,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableEurekaClient
 @SpringBootApplication
-public class EurekaserverOrderServiceApplication {
+public class OrderApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(EurekaserverOrderServiceApplication.class, args);
+        SpringApplication.run(OrderApplication.class, args);
     }
 }

@@ -1,0 +1,11 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: api-service
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://lon1:8761/eureka/,http://lon2:8762/eureka/,http://lon3:8763/eureka/

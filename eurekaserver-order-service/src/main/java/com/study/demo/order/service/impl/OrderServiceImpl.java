@@ -1,13 +1,13 @@
 package com.study.demo.order.service.impl;
 
+import com.common.domain.Order;
+import com.common.domain.OrderDetail;
+import com.common.domain.Product;
+import com.common.enums.OrderExceptionEnum;
+import com.common.enums.OrderStatusEnum;
+import com.common.enums.ProductStatusEnum;
 import com.common.exception.ServiceException;
 import com.common.util.IDGenerator;
-import com.study.demo.order.domain.Order;
-import com.study.demo.order.domain.OrderDetail;
-import com.study.demo.order.domain.Product;
-import com.study.demo.order.enums.OrderStatusEnum;
-import com.study.demo.order.enums.OrderExceptionEnum;
-import com.study.demo.order.enums.ProductStatusEnum;
 import com.study.demo.order.repository.OrderRepository;
 import com.study.demo.order.service.OrderDetailService;
 import com.study.demo.order.service.OrderService;
@@ -73,10 +73,8 @@ public class OrderServiceImpl implements OrderService {
             totalAmount = totalAmount.add(amount);
         }
         // 保存订单明细
-        List<OrderDetail> list = orderDetailService.createOrderDetailList(detailListList);
-        if (list == null) {
-            throw new ServiceException("下单失败");
-        }
+        orderDetailService.createOrderDetailList(detailListList);
+
         // 保存订单
         order.setId(orderId);
         order.setUserId(order.getUserId());

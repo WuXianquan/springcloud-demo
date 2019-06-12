@@ -65,9 +65,10 @@
     </dependencies>
 
     <modules>
-        <module>eurekaserver-server-center</module>
+        <module>eurekaserver-center-service</module>
         <module>eurekaserver-order-service</module>
         <module>eurekaserver-user-service</module>
+        <module>eurekaserver-api-service</module>
         <module>common</module>
     </modules>
 

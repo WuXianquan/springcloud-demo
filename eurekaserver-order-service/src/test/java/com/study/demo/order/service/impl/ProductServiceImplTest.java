@@ -1,7 +1,7 @@
 package com.study.demo.order.service.impl;
 
-import com.study.demo.order.domain.Product;
-import com.study.demo.order.enums.ProductStatusEnum;
+import com.common.domain.Product;
+import com.common.enums.ProductStatusEnum;
 import com.study.demo.order.service.ProductService;
 import org.junit.Assert;
 import org.junit.Test;
