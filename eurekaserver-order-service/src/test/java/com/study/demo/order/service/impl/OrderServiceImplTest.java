@@ -1,8 +1,8 @@
 package com.study.demo.order.service.impl;
 
-import com.common.domain.Order;
-import com.common.domain.OrderDetail;
-import com.common.enums.OrderStatusEnum;
+import com.study.demo.common.domain.Order;
+import com.study.demo.common.domain.OrderDetail;
+import com.study.demo.common.enums.OrderStatusEnum;
 import com.study.demo.order.service.OrderService;
 import org.junit.Assert;
 import org.junit.Test;

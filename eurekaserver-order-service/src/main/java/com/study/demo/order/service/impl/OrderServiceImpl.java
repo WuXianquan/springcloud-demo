@@ -1,13 +1,13 @@
 package com.study.demo.order.service.impl;
 
-import com.common.domain.Order;
-import com.common.domain.OrderDetail;
-import com.common.domain.Product;
-import com.common.enums.OrderExceptionEnum;
-import com.common.enums.OrderStatusEnum;
-import com.common.enums.ProductStatusEnum;
-import com.common.exception.ServiceException;
-import com.common.util.IDGenerator;
+import com.study.demo.common.domain.Order;
+import com.study.demo.common.domain.OrderDetail;
+import com.study.demo.common.domain.Product;
+import com.study.demo.common.enums.OrderExceptionEnum;
+import com.study.demo.common.enums.OrderStatusEnum;
+import com.study.demo.common.enums.ProductStatusEnum;
+import com.study.demo.common.exception.ServiceException;
+import com.study.demo.common.util.IDGenerator;
 import com.study.demo.order.repository.OrderRepository;
 import com.study.demo.order.service.OrderDetailService;
 import com.study.demo.order.service.OrderService;
@@ -36,8 +36,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderDetailService orderDetailService;
 
     @Override
-    public List<Order> findUserAllOrderInfo(Long useId) {
-        return orderRepository.findUserAllOrderInfo(useId);
+    public List<Order> findUserAllOrderInfo(Long userId) {
+        return orderRepository.findUserAllOrderInfo(userId);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.study.demo.order.service;
 
-import com.common.domain.OrderDetail;
+import com.study.demo.common.domain.OrderDetail;
 import java.util.List;
 
 /**

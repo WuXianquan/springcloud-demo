@@ -1,7 +1,7 @@
 package com.study.demo.api.controller;
 
-import com.common.domain.Order;
-import com.study.demo.api.service.impl.ApiService;
+import com.study.demo.common.domain.Order;
+import com.study.demo.api.service.ApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,8 +19,8 @@ public class ApiController {
     @Autowired
     private ApiService apiService;
 
-    @RequestMapping(value = "/orderList/{userId}", method = RequestMethod.GET)
-    public List<Order> index(@PathVariable Long userId) {
+    @RequestMapping(value = "/userOrder/{userId}", method = RequestMethod.GET)
+    public List<Order> userOrder(@PathVariable("userId") Long userId) {
         return apiService.findUserAllOrderInfo(userId);
     }
 }

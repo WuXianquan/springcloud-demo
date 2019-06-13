@@ -1,6 +1,6 @@
 package com.study.demo.order.controller;
 
-import com.common.domain.Order;
+import com.study.demo.common.domain.Order;
 import com.study.demo.order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,13 +16,14 @@ import java.util.List;
  * @Description:
  */
 @RestController
+@RequestMapping(value = "order")
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
 
-    @RequestMapping(value = "/findUserAllOrderInfo/{userId}", method = RequestMethod.GET)
-    public List<Order> index(@PathVariable Long userId) {
+    @RequestMapping(value = "/userOrder/{userId}", method = RequestMethod.GET)
+    public List<Order> userOrder(@PathVariable("userId") Long userId) {
         return orderService.findUserAllOrderInfo(userId);
     }
 }

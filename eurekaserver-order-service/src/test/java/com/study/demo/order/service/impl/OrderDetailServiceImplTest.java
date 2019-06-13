@@ -1,6 +1,6 @@
 package com.study.demo.order.service.impl;
 
-import com.common.domain.OrderDetail;
+import com.study.demo.common.domain.OrderDetail;
 import com.study.demo.order.service.OrderDetailService;
 import org.junit.Assert;
 import org.junit.Test;

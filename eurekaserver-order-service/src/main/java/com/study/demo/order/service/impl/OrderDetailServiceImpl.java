@@ -1,7 +1,7 @@
 package com.study.demo.order.service.impl;
 
-import com.common.domain.OrderDetail;
-import com.common.util.IDGenerator;
+import com.study.demo.common.domain.OrderDetail;
+import com.study.demo.common.util.IDGenerator;
 import com.study.demo.order.repository.OrderDetailRepository;
 import com.study.demo.order.service.OrderDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
