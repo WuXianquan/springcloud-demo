@@ -52,7 +52,6 @@ public class OrderServiceImplTest {
         Order order = new Order();
         order.setUserId(userId);
         order.setDetailListList(orderDetailList);
-        order.setOrderStatus(OrderStatusEnum.NEW.getCode());
         orderService.createOrder(order);
         Assert.assertEquals(order.getId(), detail.getOrderId());
         Assert.assertEquals(order.getId(), detail1.getOrderId());

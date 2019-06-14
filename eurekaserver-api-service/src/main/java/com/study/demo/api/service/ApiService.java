@@ -2,9 +2,7 @@ package com.study.demo.api.service;
 
 import com.study.demo.common.domain.Order;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -16,6 +14,9 @@ import java.util.List;
 @FeignClient(name = "order-service")
 public interface ApiService {
 
-    @RequestMapping(value = "/findUserAllOrderInfo/{userId}", method = RequestMethod.GET)
+    @GetMapping(value = "order/userOrder/{userId}")
     List<Order> findUserAllOrderInfo(@PathVariable("userId") Long useId);
+
+    @PostMapping(value = "order/createOrder")
+    Order createOrder(@RequestBody Order order);
 }

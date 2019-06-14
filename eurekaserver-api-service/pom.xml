@@ -17,16 +17,16 @@
     <name>eurekaserver-api-service</name>
     <description>开放接口服务</description>
 
-    <properties>
-        <java.version>1.8</java.version>
-        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.study.demo</groupId>
             <artifactId>common-service</artifactId>
             <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <dependency>

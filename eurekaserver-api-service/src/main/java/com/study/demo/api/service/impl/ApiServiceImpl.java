@@ -18,4 +18,9 @@ public class ApiServiceImpl implements ApiService {
     public List<Order> findUserAllOrderInfo(Long useId) {
         return null;
     }
+
+    @Override
+    public Order createOrder(Order order) {
+        return null;
+    }
 }

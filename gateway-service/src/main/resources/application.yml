@@ -1,0 +1,11 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: gateway-service
+eureka:
+  instance:
+    hostname: localhost
+  serviceUrl:
+    defaultZone: http://lon1:8761/eureka/,http://lon2:8762/eureka/,http://lon3:8763/eureka/

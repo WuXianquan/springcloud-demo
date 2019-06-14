@@ -16,11 +16,22 @@
         <relativePath/>
     </parent>
 
+    <modules>
+        <module>eurekaserver-center-service</module>
+        <module>eurekaserver-order-service</module>
+        <module>eurekaserver-user-service</module>
+        <module>eurekaserver-api-service</module>
+        <module>common-service</module>
+        <module>gateway-service</module>
+    </modules>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
-        <spring-cloud.version>Finchley.RELEASE</spring-cloud.version>
+        <fastjson.version>1.2.58</fastjson.version>
+        <lombok.version>1.18.8</lombok.version>
+        <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
     </properties>
 
     <dependencies>
@@ -31,47 +42,18 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
-            <version>1.2.58</version>
+            <version>${fastjson.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.8</version>
+            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-jdbc</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-        </dependency>
-
     </dependencies>
-
-    <modules>
-        <module>eurekaserver-center-service</module>
-        <module>eurekaserver-order-service</module>
-        <module>eurekaserver-user-service</module>
-        <module>eurekaserver-api-service</module>
-        <module>common-service</module>
-    </modules>
 
     <dependencyManagement>
         <dependencies>
