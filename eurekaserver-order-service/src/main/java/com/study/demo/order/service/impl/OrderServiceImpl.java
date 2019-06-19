@@ -14,8 +14,10 @@ import com.study.demo.order.service.OrderService;
 import com.study.demo.order.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -41,6 +43,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Order createOrder(Order order) {
         long orderId = IDGenerator.getInstance().next();
 
@@ -81,9 +84,9 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderAmount(totalAmount);
         order.setOrderStatus(OrderStatusEnum.NEW.getCode());
         order.setDetailListList(detailListList);
+        order.setCreateTime(new Timestamp(System.currentTimeMillis()));
         orderRepository.save(order);
 
-        // TODO 支付
         // TODO 实扣库存
         return order;
     }

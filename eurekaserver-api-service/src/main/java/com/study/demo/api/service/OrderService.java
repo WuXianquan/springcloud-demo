@@ -9,10 +9,10 @@ import java.util.List;
 /**
  * @Author: Lon
  * @Date: 2019/6/12 16:19
- * @Description: 开放接口基础接口
+ * @Description: 调用order服务基础接口
  */
 @FeignClient(name = "order-service")
-public interface ApiService {
+public interface OrderService {
 
     @GetMapping(value = "order/userOrder/{userId}")
     List<Order> findUserAllOrderInfo(@PathVariable("userId") Long useId);

@@ -2,6 +2,7 @@ package com.study.demo.order.controller;
 
 import com.study.demo.common.domain.Order;
 import com.study.demo.order.service.OrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @Date: 2019/6/4 16:43
  * @Description:
  */
+@Slf4j
 @RestController
 @RequestMapping(value = "order")
 public class OrderController {

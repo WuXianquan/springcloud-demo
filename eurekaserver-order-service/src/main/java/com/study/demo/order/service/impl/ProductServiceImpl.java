@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author: Lon
@@ -29,7 +30,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product findProductById(Long productId) {
-        return productRepository.getOne(productId);
+        Optional<Product> product = productRepository.findById(productId);
+        return product.isPresent() ? product.get() : null;
     }
 
     @Override

@@ -4,8 +4,22 @@ server:
 spring:
   application:
     name: user-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/springcloud_demo?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: 123456
+  jpa:
+    properties:
+      hibernate:
+        enable_lazy_load_no_trans: true
 
 eureka:
   client:
     serviceUrl:
       defaultZone: http://lon1:8761/eureka/,http://lon2:8762/eureka/,http://lon3:8763/eureka/
+
+hibernate:
+  show_sql: true
+  format_sql: true
+  dialect: org.hibernate.dialect.MySQL5InnoDBDialect

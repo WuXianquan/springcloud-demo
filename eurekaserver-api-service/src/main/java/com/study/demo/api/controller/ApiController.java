@@ -1,7 +1,8 @@
 package com.study.demo.api.controller;
 
+import com.study.demo.api.service.UserService;
 import com.study.demo.common.domain.Order;
-import com.study.demo.api.service.ApiService;
+import com.study.demo.api.service.OrderService;
 import com.study.demo.common.domain.OrderDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,16 +20,20 @@ import java.util.List;
 public class ApiController {
 
     @Autowired
-    private ApiService apiService;
+    private OrderService orderService;
+
+    @Autowired
+    private UserService userService;
 
     @GetMapping(value = "/userOrder/{userId}")
     public List<Order> userOrder(@PathVariable("userId") Long userId) {
-        return apiService.findUserAllOrderInfo(userId);
+        return orderService.findUserAllOrderInfo(userId);
     }
 
     @PostMapping(value = "/createOrder")
     public Order createOrder() {
         // 模拟测试
+        Order order = new Order();
         OrderDetail detail = new OrderDetail();
         detail.setProductId(298614743086075904L);
         detail.setProductNumber(1);
@@ -40,9 +45,18 @@ public class ApiController {
         List<OrderDetail> orderDetailList = new ArrayList<>();
         orderDetailList.add(detail);
         orderDetailList.add(detail1);
-        Order order = new Order();
+
         order.setUserId(123456L);
         order.setDetailListList(orderDetailList);
-        return apiService.createOrder(order);
+
+        // 调用下单
+        order = orderService.createOrder(order);
+
+        // 扣除用户积分
+        int ret = userService.reduceUserScore(order.getUserId(), order.getOrderAmount());
+        if (ret != 1) {
+            throw new RuntimeException("扣除积分失败");
+        }
+        return order;
     }
 }

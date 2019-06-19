@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Author: Lon
@@ -14,11 +13,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @Description:
  */
 @Repository
-@Transactional
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Modifying
-    @Query(value = "update t_product set stock = stock - :amount, frozen_stock = frozen_stock + :amount where id = :id and stock > :amount", nativeQuery = true)
+    @Query(value = "update t_product set stock = stock - :amount, frozen_stock = frozen_stock + :amount where id = :id and stock >= :amount", nativeQuery = true)
     int reduceProductStock(@Param("id") Long productId, @Param("amount") Long amount);
 
     @Modifying
