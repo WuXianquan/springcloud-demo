@@ -1,5 +1,6 @@
 package com.study.demo.order.service.impl;
 
+import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import com.study.demo.common.domain.Order;
 import com.study.demo.common.domain.OrderDetail;
 import com.study.demo.common.domain.Product;
@@ -44,6 +45,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @LcnTransaction
     public Order createOrder(Order order) {
         long orderId = IDGenerator.getInstance().next();
 

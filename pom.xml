@@ -32,6 +32,8 @@
         <fastjson.version>1.2.58</fastjson.version>
         <lombok.version>1.18.8</lombok.version>
         <spring-cloud.version>Greenwich.SR1</spring-cloud.version>
+        <druid.version>1.1.9</druid.version>
+        <codingapi.txlcn.version>5.0.2.RELEASE</codingapi.txlcn.version>
     </properties>
 
     <dependencies>
@@ -58,6 +60,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
         </dependency>
+
     </dependencies>
 
     <dependencyManagement>

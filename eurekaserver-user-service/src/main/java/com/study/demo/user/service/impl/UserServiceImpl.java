@@ -1,5 +1,6 @@
 package com.study.demo.user.service.impl;
 
+import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import com.study.demo.common.domain.User;
 import com.study.demo.common.enums.UserExceptionEnum;
 import com.study.demo.common.enums.UserStatusEnum;
@@ -58,6 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Transactional
+    @LcnTransaction
     @Override
     public Integer reduceUserScore(Long id, BigDecimal score) {
         Optional<User> user = userRepository.findById(id);

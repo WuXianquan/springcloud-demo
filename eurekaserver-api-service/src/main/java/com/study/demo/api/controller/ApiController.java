@@ -1,5 +1,6 @@
 package com.study.demo.api.controller;
 
+import com.study.demo.api.service.OpenService;
 import com.study.demo.api.service.UserService;
 import com.study.demo.common.domain.Order;
 import com.study.demo.api.service.OrderService;
@@ -25,6 +26,9 @@ public class ApiController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OpenService openService;
+
     @GetMapping(value = "/userOrder/{userId}")
     public List<Order> userOrder(@PathVariable("userId") Long userId) {
         return orderService.findUserAllOrderInfo(userId);
@@ -48,15 +52,6 @@ public class ApiController {
 
         order.setUserId(123456L);
         order.setDetailListList(orderDetailList);
-
-        // 调用下单
-        order = orderService.createOrder(order);
-
-        // 扣除用户积分
-        int ret = userService.reduceUserScore(order.getUserId(), order.getOrderAmount());
-        if (ret != 1) {
-            throw new RuntimeException("扣除积分失败");
-        }
-        return order;
+        return openService.createOrder(order);
     }
 }
