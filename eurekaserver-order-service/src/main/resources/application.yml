@@ -20,12 +20,12 @@ eureka:
       defaultZone: http://lon1:8761/eureka/,http://lon2:8762/eureka/,http://lon3:8763/eureka/
 
 hibernate:
-  show_sql: false
+  show_sql: true
   format_sql: true
   dialect: org.hibernate.dialect.MySQL5InnoDBDialect
   hbm2ddl.auto: none
 
-# LCK分布式事务配置
+# LCN分布式事务配置
 tx-lcn:
   client:
     manager-address: 127.0.0.1:8070

@@ -1,10 +1,10 @@
 package com.study.demo.api.controller;
 
 import com.study.demo.api.service.OpenService;
-import com.study.demo.api.service.UserService;
 import com.study.demo.common.domain.Order;
 import com.study.demo.api.service.OrderService;
 import com.study.demo.common.domain.OrderDetail;
+import com.study.demo.common.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +22,6 @@ public class ApiController {
 
     @Autowired
     private OrderService orderService;
-
-    @Autowired
-    private UserService userService;
 
     @Autowired
     private OpenService openService;
@@ -52,6 +49,11 @@ public class ApiController {
 
         order.setUserId(123456L);
         order.setDetailListList(orderDetailList);
-        return openService.createOrder(order);
+        try {
+            order = openService.createOrder(order);
+            return order;
+        } catch (ServiceException se) {
+            throw new ServiceException(se.getCode(), se.getMsg());
+        }
     }
 }
