@@ -12,9 +12,10 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum  UserExceptionEnum {
 
-    user_no_exits(1001, "用户不存在"),
-    user_is_delete(1002, "用户已注销"),
-    user_is_frozen(1003, "用户已被冻结");
+    USER_NO_EXITS(1001, "用户不存在"),
+    USER_IS_DELETE(1002, "用户已注销"),
+    USER_IS_FROZEN(1003, "用户已被冻结"),
+    PASSWORD_ERROR(1004, "密码错误");
 
     private Integer code;
     private String msg;

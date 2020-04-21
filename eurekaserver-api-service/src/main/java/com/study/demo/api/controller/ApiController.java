@@ -1,10 +1,16 @@
 package com.study.demo.api.controller;
 
+import com.study.demo.api.annotation.UserLoginToken;
 import com.study.demo.api.service.OpenService;
+import com.study.demo.api.service.UserFeignService;
 import com.study.demo.common.domain.Order;
-import com.study.demo.api.service.OrderService;
+import com.study.demo.api.service.OrderFeignService;
 import com.study.demo.common.domain.OrderDetail;
+import com.study.demo.common.domain.User;
+import com.study.demo.common.dto.UserDTO;
+import com.study.demo.common.vo.TokenVO;
 import com.study.demo.common.exception.ServiceException;
+import com.study.demo.common.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,21 +20,38 @@ import java.util.List;
 /**
  * @Author: Lon
  * @Date: 2019/6/12 16:32
- * @Description:
+ * @Description: api接口控制器
  */
 @RestController
 @RequestMapping(value = "api")
 public class ApiController {
 
     @Autowired
-    private OrderService orderService;
+    private OrderFeignService orderFeignService;
 
     @Autowired
     private OpenService openService;
 
+    @Autowired
+    private UserFeignService userFeignService;
+
+    // 实例：http://localhost:8083/user/login {"username":"admin","password":"123456"}
+    @PostMapping(value = "/login")
+    public TokenVO login(@RequestBody UserVO userVO) {
+        return openService.login(userVO);
+    }
+
+    @UserLoginToken
+    @GetMapping(value = "/user/{userId}")
+    public UserDTO userInfo(@PathVariable("userId") Long userId) {
+        User user = userFeignService.findUserById(userId);
+        return new UserDTO(user);
+    }
+
+    @UserLoginToken
     @GetMapping(value = "/userOrder/{userId}")
     public List<Order> userOrder(@PathVariable("userId") Long userId) {
-        return orderService.findUserAllOrderInfo(userId);
+        return orderFeignService.findUserAllOrderInfo(userId);
     }
 
     @PostMapping(value = "/createOrder")

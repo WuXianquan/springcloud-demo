@@ -10,11 +10,24 @@ spring:
     username: root
     password: 123456
 
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    timeout: 10000 # 连接超时时间（毫秒）
+    jedis:
+      pool:
+        max-active: 10 # 连接池最大连接数
+        max-idle: 5 # 连接池最大空闲连接
+        max-wait: 10000 # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        min-idle: 0 # 连接池中的最小空闲连接
+
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://lon1:8761/eureka/,http://lon2:8762/eureka/,http://lon3:8763/eureka/
-
+      #      defaultZone: http://lon1:8761/eureka/,http://lon2:8762/eureka/,http://lon3:8763/eureka/
+      defaultZone: http://lon1:8761/eureka/
 ribbon:
   #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule #配置规则 随机
   #    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule #配置规则 轮询
@@ -24,10 +37,22 @@ ribbon:
   NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RoundRobinRule
   OkToRetryOnAllOperations: false #对所有操作请求都进行重试,默认false
   ReadTimeout: 200000   #负载均衡超时时间，默认值5000
-  ConnectTimeout: 3000 #ribbon请求连接的超时时间，默认值2000
+  ConnectTimeout: 9000 #ribbon请求连接的超时时间，默认值2000
   MaxAutoRetries: 0     #对当前实例的重试次数，默认0
   MaxAutoRetriesNextServer: 1 #对切换实例的重试次数，默认1
 
+# 开启熔断器
+feign:
+  hystrix:
+    enabled: true
+# 熔断器超时时间，feign调用超时则调用降级方法
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 3000
 # LCN分布式事务配置
 tx-lcn:
   client:

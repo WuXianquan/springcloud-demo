@@ -17,7 +17,8 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://lon1:8761/eureka/,http://lon2:8762/eureka/,http://lon3:8763/eureka/
+#      defaultZone: http://lon1:8761/eureka/,http://lon2:8762/eureka/,http://lon3:8763/eureka/
+      defaultZone: http://lon1:8761/eureka/
 
 hibernate:
   show_sql: true

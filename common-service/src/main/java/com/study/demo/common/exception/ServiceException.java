@@ -1,18 +1,15 @@
 package com.study.demo.common.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import com.study.demo.common.enums.CommonErrorCode;
+import lombok.*;
 
 /**
  * @Author: Lon
  * @Date: 2019/6/11 17:14
  * @Description:
  */
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Setter
 public class ServiceException extends RuntimeException {
 
     @NonNull
@@ -20,13 +17,25 @@ public class ServiceException extends RuntimeException {
 
     private String msg;
 
+    public ServiceException(){
+        super();
+    }
+
     public ServiceException(Integer code){
+        super();
         this.code = code;
-        this.msg = "系统开小差";
+        this.msg = CommonErrorCode.BUSINESS_ERROR.getMsg();
     }
 
     public ServiceException(String msg){
-        this.code = 9999;
+        super(msg);
+        this.code = CommonErrorCode.BUSINESS_ERROR.getCode();
+        this.msg = msg;
+    }
+
+    public ServiceException(Integer code, String msg){
+        super(msg);
+        this.code = code;
         this.msg = msg;
     }
 }

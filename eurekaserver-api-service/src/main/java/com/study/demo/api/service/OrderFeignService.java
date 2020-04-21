@@ -1,5 +1,6 @@
 package com.study.demo.api.service;
 
+import com.study.demo.api.service.fallback.OrderFeignServiceFallback;
 import com.study.demo.common.domain.Order;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -11,12 +12,12 @@ import java.util.List;
  * @Date: 2019/6/12 16:19
  * @Description: 调用order服务基础接口
  */
-@FeignClient(name = "order-service")
-public interface OrderService {
+@FeignClient(name = "order-service", fallback = OrderFeignServiceFallback.class)
+public interface OrderFeignService {
 
     @GetMapping(value = "order/userOrder/{userId}")
     List<Order> findUserAllOrderInfo(@PathVariable("userId") Long useId);
 
-    @PostMapping(value = "order/createOrder")
+    @PostMapping(value = "/order/createOrder")
     Order createOrder(@RequestBody Order order);
 }

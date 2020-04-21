@@ -13,11 +13,24 @@ spring:
     properties:
       hibernate:
         enable_lazy_load_no_trans: true
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password:
+    database: 0
+    timeout: 10000 # 连接超时时间（毫秒）
+    jedis:
+      pool:
+        max-active: 10 # 连接池最大连接数
+        max-idle: 5 # 连接池最大空闲连接
+        max-wait: 10000 # 连接池最大阻塞等待时间（使用负值表示没有限制）
+        min-idle: 0 # 连接池中的最小空闲连接
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://lon1:8761/eureka/,http://lon2:8762/eureka/,http://lon3:8763/eureka/
+      #      defaultZone: http://lon1:8761/eureka/,http://lon2:8762/eureka/,http://lon3:8763/eureka/
+      defaultZone: http://lon1:8761/eureka/
 
 hibernate:
   show_sql: true

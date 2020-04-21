@@ -1,6 +1,8 @@
 package com.study.demo.user.controller;
 
-import com.study.demo.common.dto.UserDTO;
+import com.study.demo.common.domain.User;
+import com.study.demo.common.vo.TokenVO;
+import com.study.demo.common.vo.UserVO;
 import com.study.demo.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.query.Param;
@@ -20,9 +22,15 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    // http://localhost:8082/user/login {"username":"admin","password":"123456"}
+    @PostMapping(value = "/login")
+    public TokenVO login(@RequestBody UserVO userVO) {
+        return userService.login(userVO);
+    }
+
     @GetMapping(value = "/userInfo/{id}")
-    public UserDTO userInfo(@PathVariable("id") Long id) {
-        return new UserDTO(userService.findUserById(id));
+    public User userInfo(@PathVariable("id") Long id) {
+        return userService.findUserById(id);
     }
 
     @PostMapping(value = "/addUserScore")

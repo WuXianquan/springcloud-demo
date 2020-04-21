@@ -1,6 +1,8 @@
 package com.study.demo.user.service;
 
 import com.study.demo.common.domain.User;
+import com.study.demo.common.vo.TokenVO;
+import com.study.demo.common.vo.UserVO;
 
 import java.math.BigDecimal;
 
@@ -11,7 +13,14 @@ import java.math.BigDecimal;
  */
 public interface UserService {
 
-    User findUserById(Long id);
+    /**
+     * 用户登录
+     * @param userVO 用户参数
+     * @return
+     */
+    TokenVO login(UserVO userVO);
+
+    User findUserById(Long id) ;
 
     User findUserByUsername(String username);
 
@@ -20,4 +29,6 @@ public interface UserService {
     Integer addUserScore(Long id, BigDecimal score);
 
     Integer reduceUserScore(Long id, BigDecimal score);
+
+
 }

@@ -1,5 +1,6 @@
 package com.study.demo.common.domain;
 
+import com.study.demo.common.base.BaseDomain;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.NotFound;
@@ -23,7 +24,7 @@ import java.sql.Timestamp;
 @Setter
 @Entity
 @Table(name = "t_user")
-public class User {
+public class User extends BaseDomain {
 
     @Id
     @Column(unique = true)
