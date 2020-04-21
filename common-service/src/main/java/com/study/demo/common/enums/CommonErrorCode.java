@@ -47,9 +47,9 @@ public enum CommonErrorCode {
     BUSINESS_ERROR(400, "业务异常"),
 
     /**
-     * 非法请求
+     * 非法请求, token无效
      */
-    ILLEGAL_REQUEST(-1, "非法请求"),
+    ILLEGAL_REQUEST(-1, "非法请求，token无效"),
 
     /**
      * rpc调用异常
@@ -62,9 +62,9 @@ public enum CommonErrorCode {
     SERVICE_DOWN_ERROR(520, "服务降级"),
 
     /**
-     * 用户未登录
+     * token不能为空
      */
-    NO_LOGIN_ERROR(530, "用户未登录");
+    NO_LOGIN_ERROR(530, "token不能为空");
 
     private Integer code;
 

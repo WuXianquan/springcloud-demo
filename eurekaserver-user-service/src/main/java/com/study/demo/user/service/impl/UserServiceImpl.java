@@ -125,7 +125,7 @@ public class UserServiceImpl implements UserService {
         tokenVO.setToken(token);
 
         // 存入redis
-        redisUtil.setForTimeM("user:token:" + userVO.getUsername(), token, 60);
+        redisUtil.setForTimeM("user:token:" + user.getId(), token, 60);
         return tokenVO;
     }
 }

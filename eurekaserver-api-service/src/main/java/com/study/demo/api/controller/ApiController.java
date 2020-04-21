@@ -35,7 +35,7 @@ public class ApiController {
     @Autowired
     private UserFeignService userFeignService;
 
-    // 实例：http://localhost:8083/user/login {"username":"admin","password":"123456"}
+    // http://localhost:8083/user/login {"username":"admin","password":"123456"}
     @PostMapping(value = "/login")
     public TokenVO login(@RequestBody UserVO userVO) {
         return openService.login(userVO);

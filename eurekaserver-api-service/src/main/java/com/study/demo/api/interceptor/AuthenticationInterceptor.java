@@ -71,9 +71,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 }
 
                 // redis校验token
-                String rt = redisUtil.get("user:token" + userId);
+                String rt = redisUtil.get("user:token:" + userId);
                 if (rt != null) {
-                    return true;
+                    if (token.equals(rt)) return true;
+                    else throw new ServiceException(CommonErrorCode.ILLEGAL_REQUEST.getCode(), CommonErrorCode.ILLEGAL_REQUEST.getMsg());
                 }
 
                 User user = userFeignService.findUserById(Long.valueOf(userId));
