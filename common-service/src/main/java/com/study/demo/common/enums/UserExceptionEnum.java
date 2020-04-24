@@ -15,7 +15,8 @@ public enum  UserExceptionEnum {
     USER_NO_EXITS(1001, "用户不存在"),
     USER_IS_DELETE(1002, "用户已注销"),
     USER_IS_FROZEN(1003, "用户已被冻结"),
-    PASSWORD_ERROR(1004, "密码错误");
+    PASSWORD_ERROR(1004, "密码错误"),
+    USERNAME_IS_USED(1004, "用户名已被注册");
 
     private Integer code;
     private String msg;

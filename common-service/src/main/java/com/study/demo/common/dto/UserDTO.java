@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.Proxy;
 import org.springframework.beans.BeanUtils;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -20,7 +21,7 @@ import java.text.SimpleDateFormat;
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDTO {
+public class UserDTO implements Serializable {
 
     private Long id;
 

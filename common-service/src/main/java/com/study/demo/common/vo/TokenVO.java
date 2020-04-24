@@ -1,6 +1,5 @@
 package com.study.demo.common.vo;
 
-import com.study.demo.common.base.BaseDomain;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,11 +14,15 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class TokenVO extends BaseDomain {
+public class TokenVO {
 
-    private Integer code;
-
-    private String msg;
-
+    /**
+     * 获取到的凭证
+     */
     private String token;
+
+    /**
+     * 凭证有效时间,单位：秒
+     */
+    private Long expireTime;
 }

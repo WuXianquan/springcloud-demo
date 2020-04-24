@@ -9,10 +9,14 @@ import com.study.demo.api.annotation.PassToken;
 import com.study.demo.api.annotation.UserLoginToken;
 import com.study.demo.api.service.UserFeignService;
 import com.study.demo.api.util.RedisUtil;
+import com.study.demo.common.consts.TokenConst;
 import com.study.demo.common.domain.User;
 import com.study.demo.common.enums.CommonErrorCode;
+import com.study.demo.common.enums.ResponseEnum;
 import com.study.demo.common.enums.UserExceptionEnum;
 import com.study.demo.common.exception.ServiceException;
+import com.study.demo.common.response.ApiRepsonseResult;
+import com.study.demo.common.util.MapUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
@@ -22,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: Lon
@@ -38,8 +43,8 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     private RedisUtil redisUtil;
 
     @Override
-    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
-        String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
+    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) {
+        String token = httpServletRequest.getHeader(TokenConst.TOKEN_HEAD);// 从 http 请求头中取出 token
         // 如果不是映射到方法直接通过
         if (!(object instanceof HandlerMethod)) {
             return true;
@@ -71,19 +76,24 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 }
 
                 // redis校验token
-                String rt = redisUtil.get("user:token:" + userId);
+                String redisKey = TokenConst.TOKEN_REDISKEY_PRE_ID + userId;
+                String rt = redisUtil.get(redisKey);
                 if (rt != null) {
-                    if (token.equals(rt)) return true;
-                    else throw new ServiceException(CommonErrorCode.ILLEGAL_REQUEST.getCode(), CommonErrorCode.ILLEGAL_REQUEST.getMsg());
+                    if (token.equals(rt)) {
+                        return true;
+                    } else {
+                        throw new ServiceException(CommonErrorCode.ILLEGAL_REQUEST.getCode(), CommonErrorCode.ILLEGAL_REQUEST.getMsg());
+                    }
                 }
 
-                User user = userFeignService.findUserById(Long.valueOf(userId));
+                ApiRepsonseResult result = userFeignService.findUserById(Long.valueOf(userId));
+                if (result.getCode().intValue() != ResponseEnum.SUCCESS.getCode().intValue()) {
+                    throw new ServiceException(result.getCode(), result.getMsg());
+                }
+
+                User user = MapUtil.convertToBean(result.getBody(), User.class);
                 if (user == null) {
                     throw new ServiceException(UserExceptionEnum.USER_NO_EXITS.getCode(), UserExceptionEnum.USER_NO_EXITS.getMsg());
-                }
-                // 判断是否服务降级
-                if (user.getIsFeign() != null && user.getIsFeign()) {
-                    throw new ServiceException(CommonErrorCode.SERVICE_DOWN_ERROR.getCode(), CommonErrorCode.SERVICE_DOWN_ERROR.getMsg());
                 }
 
                 // 验证 token
@@ -93,6 +103,10 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 } catch (JWTVerificationException e) {
                     log.error("JWT token校验不通过, token = {}", token);
                     throw new ServiceException(CommonErrorCode.ILLEGAL_REQUEST.getCode(), CommonErrorCode.ILLEGAL_REQUEST.getMsg());
+                }
+                Long expireTime = redisUtil.getExpire(TokenConst.TOKEN_REDISKEY_PRE_USERNAME + user.getUsername(), TimeUnit.SECONDS);
+                if (expireTime != null && expireTime > 0) {
+                    redisUtil.setForTimeS(redisKey, token, expireTime - 1);
                 }
                 return true;
             }

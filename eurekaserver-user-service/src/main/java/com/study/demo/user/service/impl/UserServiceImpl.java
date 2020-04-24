@@ -3,9 +3,10 @@ package com.study.demo.user.service.impl;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
+import com.study.demo.common.consts.TokenConst;
 import com.study.demo.common.domain.User;
+import com.study.demo.common.util.IDGenerator;
 import com.study.demo.common.vo.TokenVO;
-import com.study.demo.common.enums.ResponseEnum;
 import com.study.demo.common.enums.UserExceptionEnum;
 import com.study.demo.common.enums.UserStatusEnum;
 import com.study.demo.common.exception.ServiceException;
@@ -19,7 +20,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author: Lon
@@ -36,10 +39,80 @@ public class UserServiceImpl implements UserService {
     private RedisUtil redisUtil;
 
     @Override
+    public TokenVO register(UserVO userVO) {
+        // 校验用户合法性
+        String key = TokenConst.TOKEN_REDISKEY_PRE_USERNAME + userVO.getUsername();
+        String rt = redisUtil.get(key);
+        if (rt != null) {
+            throw new ServiceException(UserExceptionEnum.USERNAME_IS_USED.getCode(), UserExceptionEnum.USERNAME_IS_USED.getMsg());
+        }
+
+        User user = userRepository.findUserByUsername(userVO.getUsername());
+        if (user != null) {
+            throw new ServiceException(UserExceptionEnum.USERNAME_IS_USED.getCode(), UserExceptionEnum.USERNAME_IS_USED.getMsg());
+        }
+
+        User newUser = new User();
+        newUser.setId(IDGenerator.getInstance().next());
+        newUser.setUsername(userVO.getUsername());
+        newUser.setPassword(MD5.getMD5(userVO.getPassword()));
+        newUser.setScore(BigDecimal.ZERO);
+        newUser.setStatus(UserStatusEnum.NORMAL.getCode());
+        newUser.setCreateTime(new Timestamp(System.currentTimeMillis()));
+        userRepository.saveAndFlush(newUser);
+
+        // 生成token
+        String token = JWT.create().withAudience(String.valueOf(user.getId())).sign(Algorithm.HMAC256(user.getPassword()));
+        TokenVO tokenVO = new TokenVO();
+        tokenVO.setToken(token);
+        tokenVO.setExpireTime(TokenConst.TOKEN_REDISKEY_EXPIRETIME);
+
+        // 存入redis
+        redisUtil.setForTimeS(key, token, TokenConst.TOKEN_REDISKEY_EXPIRETIME);
+        return tokenVO;
+    }
+
+    @Override
+    public TokenVO login(UserVO userVO) {
+        // 从redis读取用户token
+        String key = TokenConst.TOKEN_REDISKEY_PRE_USERNAME + userVO.getUsername();
+        String rt = redisUtil.get(key);
+        if (rt != null) {
+            Long expireTime = redisUtil.getExpire(key, TimeUnit.SECONDS);
+            if (expireTime > 3) { // 保留3秒做缓冲
+                TokenVO tokenVO = new TokenVO();
+                tokenVO.setToken(rt);
+                tokenVO.setExpireTime(expireTime);
+                return tokenVO;
+            }
+        }
+
+        // 校验用户合法性
+        User user = findUserByUsername(userVO.getUsername());
+        if (user == null) {
+            throw new ServiceException(UserExceptionEnum.USER_NO_EXITS.getCode(), UserExceptionEnum.USER_NO_EXITS.getMsg());
+        }
+        if (!MD5.getMD5(userVO.getPassword()).equals(user.getPassword())) {
+            throw new ServiceException(UserExceptionEnum.PASSWORD_ERROR.getCode(), UserExceptionEnum.PASSWORD_ERROR.getMsg());
+        }
+
+        // 生成token
+        String token = JWT.create().withAudience(String.valueOf(user.getId())).sign(Algorithm.HMAC256(user.getPassword()));
+        TokenVO tokenVO = new TokenVO();
+        tokenVO.setToken(token);
+        tokenVO.setExpireTime(TokenConst.TOKEN_REDISKEY_EXPIRETIME);
+
+        // 存入redis
+        redisUtil.setForTimeS(key, token, TokenConst.TOKEN_REDISKEY_EXPIRETIME);
+        return tokenVO;
+    }
+
+
+    @Override
     public User findUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
-            throw new ServiceException(UserExceptionEnum.USER_NO_EXITS.getCode(),UserExceptionEnum.USER_NO_EXITS.getMsg());
+            throw new ServiceException(UserExceptionEnum.USER_NO_EXITS.getCode(), UserExceptionEnum.USER_NO_EXITS.getMsg());
         }
         return user.get();
     }
@@ -48,7 +121,7 @@ public class UserServiceImpl implements UserService {
     public User findUserByUsername(String username) {
         User user = userRepository.findUserByUsername(username);
         if (user == null) {
-            throw new ServiceException(UserExceptionEnum.USER_NO_EXITS.getCode(),UserExceptionEnum.USER_NO_EXITS.getMsg());
+            throw new ServiceException(UserExceptionEnum.USER_NO_EXITS.getCode(), UserExceptionEnum.USER_NO_EXITS.getMsg());
         }
         return userRepository.findUserByUsername(username);
     }
@@ -91,41 +164,5 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(UserExceptionEnum.USER_IS_FROZEN.getCode(), UserExceptionEnum.USER_IS_FROZEN.getMsg());
         }
         return userRepository.reduceUserScore(id, score);
-    }
-
-    @Override
-    public TokenVO login(UserVO userVO) {
-        TokenVO tokenVO = new TokenVO();
-        User user = findUserByUsername(userVO.getUsername());
-        if (user == null) {
-            tokenVO.setCode(UserExceptionEnum.USER_NO_EXITS.getCode());
-            tokenVO.setMsg(UserExceptionEnum.USER_NO_EXITS.getMsg());
-            return tokenVO;
-        }
-
-        if (!MD5.getMD5(userVO.getPassword()).equals(user.getPassword())) {
-            tokenVO.setCode(UserExceptionEnum.PASSWORD_ERROR.getCode());
-            tokenVO.setMsg(UserExceptionEnum.PASSWORD_ERROR.getMsg());
-            return tokenVO;
-        }
-
-        // 从redis读取用户token
-        String rt = redisUtil.get("user:token:" + user.getId());
-        if (rt != null) {
-            tokenVO.setCode(ResponseEnum.SUCCESS.getCode());
-            tokenVO.setMsg(ResponseEnum.SUCCESS.getMsg());
-            tokenVO.setToken(rt);
-            return tokenVO;
-        }
-
-        // 生成token
-        String token = JWT.create().withAudience(String.valueOf(user.getId())).sign(Algorithm.HMAC256(user.getPassword()));
-        tokenVO.setCode(ResponseEnum.SUCCESS.getCode());
-        tokenVO.setMsg(ResponseEnum.SUCCESS.getMsg());
-        tokenVO.setToken(token);
-
-        // 存入redis
-        redisUtil.setForTimeM("user:token:" + user.getId(), token, 60);
-        return tokenVO;
     }
 }

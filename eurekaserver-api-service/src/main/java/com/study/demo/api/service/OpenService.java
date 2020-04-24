@@ -1,6 +1,7 @@
 package com.study.demo.api.service;
 
 import com.study.demo.common.domain.Order;
+import com.study.demo.common.dto.UserDTO;
 import com.study.demo.common.vo.TokenVO;
 import com.study.demo.common.vo.UserVO;
 
@@ -11,7 +12,11 @@ import com.study.demo.common.vo.UserVO;
  */
 public interface OpenService {
 
+    TokenVO register(UserVO userVO);
+
     TokenVO login(UserVO userVO);
 
     Order createOrder(Order order);
+
+    UserDTO findUserById(Long userId);
 }

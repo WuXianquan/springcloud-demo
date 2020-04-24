@@ -1,12 +1,11 @@
 package com.study.demo.api.controller;
 
+import com.study.demo.api.annotation.PassToken;
 import com.study.demo.api.annotation.UserLoginToken;
 import com.study.demo.api.service.OpenService;
-import com.study.demo.api.service.UserFeignService;
 import com.study.demo.common.domain.Order;
 import com.study.demo.api.service.OrderFeignService;
 import com.study.demo.common.domain.OrderDetail;
-import com.study.demo.common.domain.User;
 import com.study.demo.common.dto.UserDTO;
 import com.study.demo.common.vo.TokenVO;
 import com.study.demo.common.exception.ServiceException;
@@ -32,20 +31,32 @@ public class ApiController {
     @Autowired
     private OpenService openService;
 
-    @Autowired
-    private UserFeignService userFeignService;
+    @PassToken
+    @PostMapping(value = "/register")
+    public TokenVO register(@RequestBody UserVO userVO) {
+        return openService.register(userVO);
+    }
 
-    // http://localhost:8083/user/login {"username":"admin","password":"123456"}
+    /**
+     * 用户登录，示例http://localhost:8083/user/login，参数{"username":"admin","password":"123456"}
+     * @param userVO
+     * @return
+     */
+    @PassToken
     @PostMapping(value = "/login")
     public TokenVO login(@RequestBody UserVO userVO) {
         return openService.login(userVO);
     }
 
+    /**
+     * 查询用户个人信息
+     * @param userId
+     * @return
+     */
     @UserLoginToken
     @GetMapping(value = "/user/{userId}")
     public UserDTO userInfo(@PathVariable("userId") Long userId) {
-        User user = userFeignService.findUserById(userId);
-        return new UserDTO(user);
+        return openService.findUserById(userId);
     }
 
     @UserLoginToken

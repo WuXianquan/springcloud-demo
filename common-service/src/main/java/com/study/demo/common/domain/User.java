@@ -1,6 +1,5 @@
 package com.study.demo.common.domain;
 
-import com.study.demo.common.base.BaseDomain;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.NotFound;
@@ -11,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
@@ -24,7 +24,7 @@ import java.sql.Timestamp;
 @Setter
 @Entity
 @Table(name = "t_user")
-public class User extends BaseDomain {
+public class User implements Serializable {
 
     @Id
     @Column(unique = true)

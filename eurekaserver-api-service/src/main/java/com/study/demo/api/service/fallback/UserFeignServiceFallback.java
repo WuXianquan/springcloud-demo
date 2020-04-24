@@ -1,8 +1,7 @@
 package com.study.demo.api.service.fallback;
 
 import com.study.demo.api.service.UserFeignService;
-import com.study.demo.common.domain.User;
-import com.study.demo.common.vo.TokenVO;
+import com.study.demo.common.response.ApiRepsonseResult;
 import com.study.demo.common.vo.UserVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,26 +17,26 @@ import java.math.BigDecimal;
 @Service
 public class UserFeignServiceFallback implements UserFeignService {
 
-
     @Override
-    public User findUserById(Long userId) {
-        log.error("远程调用[findUserById]失败, userId = {}", userId);
-        User user = new User();
-        user.setIsFeign(true);
-        return user;
+    public ApiRepsonseResult register(UserVO userVO) {
+        log.error("远程调用[register]失败, username = {}, password = {}", userVO.getUsername(), userVO.getPassword());
+        return ApiRepsonseResult.ofFail();
     }
 
+    @Override
+    public ApiRepsonseResult login(UserVO userVO) {
+        log.error("远程调用[login]失败, username = {}, password = {}", userVO.getUsername(), userVO.getPassword());
+        return ApiRepsonseResult.ofFail();
+    }
+
+    @Override
+    public ApiRepsonseResult findUserById(Long userId) {
+        log.error("远程调用[findUserById]失败, userId = {}", userId);
+        return ApiRepsonseResult.ofFail();
+    }
 
     @Override
     public Integer reduceUserScore(Long id, BigDecimal score) {
         return null;
-    }
-
-    @Override
-    public TokenVO login(UserVO userVO) {
-        log.error("远程调用[login]失败, username = {}", userVO.getUsername());
-        TokenVO tokenVO = new TokenVO();
-        tokenVO.setIsFeign(true);
-        return tokenVO;
     }
 }

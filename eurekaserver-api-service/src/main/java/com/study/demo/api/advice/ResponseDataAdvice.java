@@ -3,8 +3,6 @@ package com.study.demo.api.advice;
 import com.alibaba.fastjson.JSON;
 import com.study.demo.api.annotation.IgnorReponseAdvice;
 import com.study.demo.api.config.FilterConfig;
-import com.study.demo.common.base.BaseDomain;
-import com.study.demo.common.enums.CommonErrorCode;
 import com.study.demo.common.response.ApiRepsonseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -59,17 +57,10 @@ public class ResponseDataAdvice implements ResponseBodyAdvice<Object> {
         if (o == null) {
             return ApiRepsonseResult.ofSuccess();
         }
-        // o is instanceof ConmmonResponse -> return o
+        // feign降级处理返回类型为ApiRepsonseResult
         if (o instanceof ApiRepsonseResult) {
             return o;
         }
-        // hystrix 降级返回特殊处理
-        if (o instanceof BaseDomain) {
-            if (((BaseDomain) o).getIsFeign() != null && ((BaseDomain) o).getIsFeign()) {
-                return new ApiRepsonseResult(CommonErrorCode.SERVICE_DOWN_ERROR.getCode(), CommonErrorCode.SERVICE_DOWN_ERROR.getMsg());
-            }
-        }
-
         // string 特殊处理
         if (o instanceof String) {
             return JSON.toJSONString(ApiRepsonseResult.ofSuccess(o));

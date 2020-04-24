@@ -22,7 +22,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    // http://localhost:8082/user/login {"username":"admin","password":"123456"}
+    @PostMapping(value = "/register")
+    public TokenVO register(@RequestBody UserVO userVO) {
+        return userService.register(userVO);
+    }
+
     @PostMapping(value = "/login")
     public TokenVO login(@RequestBody UserVO userVO) {
         return userService.login(userVO);

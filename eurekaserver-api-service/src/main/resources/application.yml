@@ -52,7 +52,7 @@ hystrix:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 3000
+            timeoutInMilliseconds: 10003000
 # LCN分布式事务配置
 tx-lcn:
   client:

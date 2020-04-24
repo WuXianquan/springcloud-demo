@@ -14,6 +14,13 @@ import java.math.BigDecimal;
 public interface UserService {
 
     /**
+     * 用户注册
+     * @param userVO 用户参数
+     * @return
+     */
+    TokenVO register(UserVO userVO);
+
+    /**
      * 用户登录
      * @param userVO 用户参数
      * @return

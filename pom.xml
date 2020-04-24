@@ -36,6 +36,7 @@
         <codingapi.txlcn.version>5.0.2.RELEASE</codingapi.txlcn.version>
         <annotations.version>3.0.1</annotations.version>
         <jwt.version>3.4.0</jwt.version>
+        <commons-lang3.version>3.10</commons-lang3.version>
     </properties>
 
     <dependencies>
@@ -67,6 +68,12 @@
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>annotations</artifactId>
             <version>${annotations.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
         </dependency>
 
         <!-- jedis -->

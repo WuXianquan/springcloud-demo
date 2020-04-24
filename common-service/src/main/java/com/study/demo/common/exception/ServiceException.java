@@ -1,6 +1,7 @@
 package com.study.demo.common.exception;
 
 import com.study.demo.common.enums.CommonErrorCode;
+import com.study.demo.common.response.ApiRepsonseResult;
 import lombok.*;
 
 /**
@@ -37,5 +38,11 @@ public class ServiceException extends RuntimeException {
         super(msg);
         this.code = code;
         this.msg = msg;
+    }
+
+    public ServiceException(ApiRepsonseResult repsonseResult){
+        super(repsonseResult.getMsg());
+        this.code = repsonseResult.getCode();
+        this.msg = repsonseResult.getMsg();
     }
 }

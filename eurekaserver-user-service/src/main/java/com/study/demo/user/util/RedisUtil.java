@@ -37,6 +37,17 @@ public class RedisUtil<K, V> {
     }
 
     /**
+     * 设置 String 类型 key-value 并添加过期时间 (单位秒)
+     *
+     * @param key
+     * @param value
+     * @param time
+     */
+    public void setForTimeS(K key, V value, long time) {
+        redisTemplate.opsForValue().set(key, value, time, TimeUnit.SECONDS);
+    }
+
+    /**
      * 设置 String 类型 key-value 并添加过期时间 (单位分钟)
      *
      * @param key
@@ -83,5 +94,24 @@ public class RedisUtil<K, V> {
      */
     public Long deleteHash(K key, Object... hashKeys) {
         return redisTemplate.opsForHash().delete(key, hashKeys);
+    }
+
+    /**
+     * 获取key的有效时间
+     * @param key
+     * @return
+     */
+    public Long getExpire(K key) {
+        return redisTemplate.getExpire(key);
+    }
+
+    /**
+     * 获取key的有效时间
+     * @param key
+     * @param timeUnit
+     * @return
+     */
+    public Long getExpire(K key, TimeUnit timeUnit) {
+        return redisTemplate.getExpire(key, timeUnit);
     }
 }
