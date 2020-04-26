@@ -2,6 +2,7 @@ package com.study.demo.order.service.impl;
 
 import com.study.demo.common.domain.Product;
 import com.study.demo.common.enums.ProductStatusEnum;
+import com.study.demo.common.util.PageHelper;
 import com.study.demo.order.service.ProductService;
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,7 +12,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -24,8 +24,8 @@ public class ProductServiceImplTest {
 
     @Test
     public void findProductList() {
-        List<Product> products = productService.findProductList();
-        Assert.assertNotEquals(0, products.size());
+        PageHelper helper = productService.findProductList(new PageHelper());
+        Assert.assertNotEquals(0, helper.getSize().intValue());
     }
 
     @Test

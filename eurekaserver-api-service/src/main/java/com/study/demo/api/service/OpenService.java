@@ -2,6 +2,7 @@ package com.study.demo.api.service;
 
 import com.study.demo.common.domain.Order;
 import com.study.demo.common.dto.UserDTO;
+import com.study.demo.common.util.PageHelper;
 import com.study.demo.common.vo.TokenVO;
 import com.study.demo.common.vo.UserVO;
 
@@ -19,4 +20,6 @@ public interface OpenService {
     Order createOrder(Order order);
 
     UserDTO findUserById(Long userId);
+
+    PageHelper listProduct(PageHelper pageHelper);
 }

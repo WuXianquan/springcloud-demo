@@ -7,11 +7,13 @@ import com.study.demo.api.service.UserFeignService;
 import com.study.demo.api.util.RedisUtil;
 import com.study.demo.common.consts.TokenConst;
 import com.study.demo.common.domain.Order;
+import com.study.demo.common.domain.Product;
 import com.study.demo.common.domain.User;
 import com.study.demo.common.dto.UserDTO;
 import com.study.demo.common.enums.ResponseEnum;
 import com.study.demo.common.response.ApiRepsonseResult;
 import com.study.demo.common.util.MapUtil;
+import com.study.demo.common.util.PageHelper;
 import com.study.demo.common.vo.TokenVO;
 import com.study.demo.common.enums.OrderExceptionEnum;
 import com.study.demo.common.exception.ServiceException;
@@ -21,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -44,9 +47,7 @@ public class OpenServiceImpl implements OpenService {
     @Override
     public TokenVO register(UserVO userVO) {
         ApiRepsonseResult result = userFeignService.register(userVO);
-        if (result.getCode().intValue() != ResponseEnum.SUCCESS.getCode().intValue()) {
-            throw new ServiceException(result);
-        }
+        checkServiceResultCode(result);
 
         // token做redis缓存处理
         TokenVO tokenVO = MapUtil.convertToBean(result.getBody(), TokenVO.class);
@@ -71,9 +72,7 @@ public class OpenServiceImpl implements OpenService {
         }
 
         ApiRepsonseResult result = userFeignService.login(userVO);
-        if (result.getCode().intValue() != ResponseEnum.SUCCESS.getCode().intValue()) {
-            throw new ServiceException(result);
-        }
+        checkServiceResultCode(result);
 
         // token做redis缓存处理
         TokenVO tokenVO = MapUtil.convertToBean(result.getBody(), TokenVO.class);
@@ -84,8 +83,11 @@ public class OpenServiceImpl implements OpenService {
     @Override
     @LcnTransaction
     public Order createOrder(Order order) {
-        // 下单
-        order = orderFeignService.createOrder(order);
+        ApiRepsonseResult result = orderFeignService.createOrder(order);
+        if (result.getCode().intValue() != ResponseEnum.SUCCESS.getCode().intValue()) {
+            throw new ServiceException(result);
+        }
+        order = MapUtil.convertToBean(result.getBody(), Order.class);
         if (order.getId() == null) {
             throw new ServiceException(OrderExceptionEnum.create_order_error.getCode(),
                     OrderExceptionEnum.create_order_error.getMsg());
@@ -102,10 +104,26 @@ public class OpenServiceImpl implements OpenService {
     @Override
     public UserDTO findUserById(Long userId) {
         ApiRepsonseResult result = userFeignService.findUserById(userId);
+        checkServiceResultCode(result);
+        User user = MapUtil.convertToBean(result.getBody(), User.class);
+        return new UserDTO(user);
+    }
+
+    @Override
+    public PageHelper listProduct(PageHelper pageHelper) {
+        ApiRepsonseResult result = orderFeignService.listProduct(pageHelper);
+        checkServiceResultCode(result);
+        pageHelper = MapUtil.convertToBean(result.getBody(), PageHelper.class);
+        return pageHelper;
+    }
+
+    /**
+     * 检查远程API接口返回值状态码
+     * @param result
+     */
+    private void checkServiceResultCode(ApiRepsonseResult result) {
         if (result.getCode().intValue() != ResponseEnum.SUCCESS.getCode().intValue()) {
             throw new ServiceException(result);
         }
-        User user = MapUtil.convertToBean(result.getBody(), User.class);
-        return new UserDTO(user);
     }
 }

@@ -2,10 +2,10 @@ package com.study.demo.api.service.fallback;
 
 import com.study.demo.api.service.OrderFeignService;
 import com.study.demo.common.domain.Order;
+import com.study.demo.common.response.ApiRepsonseResult;
+import com.study.demo.common.util.PageHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @Author: Lon
@@ -17,14 +17,20 @@ import java.util.List;
 public class OrderFeignServiceFallback implements OrderFeignService {
 
     @Override
-    public List<Order> findUserAllOrderInfo(Long useId) {
+    public ApiRepsonseResult findUserAllOrderInfo(Long useId) {
         log.error("远程调用[findUserAllOrderInfo]失败, userId = {}", useId);
-        return null;
+        return ApiRepsonseResult.ofServiceFusesFail();
     }
 
     @Override
-    public Order createOrder(Order order) {
+    public ApiRepsonseResult createOrder(Order order) {
         log.error("远程调用[createOrder]失败, userId = {}", order.getUserId());
-        return new Order();
+        return ApiRepsonseResult.ofServiceFusesFail();
+    }
+
+    @Override
+    public ApiRepsonseResult listProduct(PageHelper pageHelper) {
+        log.error("远程调用[listProduct]失败");
+        return ApiRepsonseResult.ofServiceFusesFail();
     }
 }

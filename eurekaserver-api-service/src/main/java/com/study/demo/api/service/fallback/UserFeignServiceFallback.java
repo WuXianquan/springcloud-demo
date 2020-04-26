@@ -20,19 +20,19 @@ public class UserFeignServiceFallback implements UserFeignService {
     @Override
     public ApiRepsonseResult register(UserVO userVO) {
         log.error("远程调用[register]失败, username = {}, password = {}", userVO.getUsername(), userVO.getPassword());
-        return ApiRepsonseResult.ofFail();
+        return ApiRepsonseResult.ofServiceFusesFail();
     }
 
     @Override
     public ApiRepsonseResult login(UserVO userVO) {
         log.error("远程调用[login]失败, username = {}, password = {}", userVO.getUsername(), userVO.getPassword());
-        return ApiRepsonseResult.ofFail();
+        return ApiRepsonseResult.ofServiceFusesFail();
     }
 
     @Override
     public ApiRepsonseResult findUserById(Long userId) {
         log.error("远程调用[findUserById]失败, userId = {}", userId);
-        return ApiRepsonseResult.ofFail();
+        return ApiRepsonseResult.ofServiceFusesFail();
     }
 
     @Override

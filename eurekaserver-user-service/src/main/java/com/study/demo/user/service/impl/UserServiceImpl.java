@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
         userRepository.saveAndFlush(newUser);
 
         // 生成token
-        String token = JWT.create().withAudience(String.valueOf(user.getId())).sign(Algorithm.HMAC256(user.getPassword()));
+        String token = JWT.create().withAudience(String.valueOf(newUser.getId())).sign(Algorithm.HMAC256(newUser.getPassword()));
         TokenVO tokenVO = new TokenVO();
         tokenVO.setToken(token);
         tokenVO.setExpireTime(TokenConst.TOKEN_REDISKEY_EXPIRETIME);

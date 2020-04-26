@@ -57,9 +57,9 @@ public enum CommonErrorCode {
     RPC_ERROR(510, "呀，网络出问题啦！"),
 
     /**
-     * 服务降级
+     * 服务熔断
      */
-    SERVICE_DOWN_ERROR(520, "服务降级"),
+    SERVICE_FUSES_ERROR(520, "服务熔断"),
 
     /**
      * token不能为空

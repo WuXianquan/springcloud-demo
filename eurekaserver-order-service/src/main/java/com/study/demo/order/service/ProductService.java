@@ -1,6 +1,7 @@
 package com.study.demo.order.service;
 
 import com.study.demo.common.domain.Product;
+import com.study.demo.common.util.PageHelper;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public interface ProductService {
 
-    List<Product> findProductList();
+    PageHelper findProductList(PageHelper pageHelper);
 
     Product findProductById(Long productId);
 

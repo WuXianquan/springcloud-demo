@@ -7,6 +7,7 @@ import com.study.demo.common.domain.Order;
 import com.study.demo.api.service.OrderFeignService;
 import com.study.demo.common.domain.OrderDetail;
 import com.study.demo.common.dto.UserDTO;
+import com.study.demo.common.util.PageHelper;
 import com.study.demo.common.vo.TokenVO;
 import com.study.demo.common.exception.ServiceException;
 import com.study.demo.common.vo.UserVO;
@@ -39,6 +40,7 @@ public class ApiController {
 
     /**
      * 用户登录，示例http://localhost:8083/user/login，参数{"username":"admin","password":"123456"}
+     *
      * @param userVO
      * @return
      */
@@ -50,6 +52,7 @@ public class ApiController {
 
     /**
      * 查询用户个人信息
+     *
      * @param userId
      * @return
      */
@@ -59,10 +62,23 @@ public class ApiController {
         return openService.findUserById(userId);
     }
 
+    /**
+     * 查询商品列表
+     *
+     * @return
+     */
+    @UserLoginToken
+    @GetMapping(value = "/product/list")
+    public PageHelper listProduct(@RequestBody PageHelper pageHelper) {
+        return openService.listProduct(pageHelper);
+    }
+
+
     @UserLoginToken
     @GetMapping(value = "/userOrder/{userId}")
     public List<Order> userOrder(@PathVariable("userId") Long userId) {
-        return orderFeignService.findUserAllOrderInfo(userId);
+//        return orderFeignService.findUserAllOrderInfo(userId);
+        return null;
     }
 
     @PostMapping(value = "/createOrder")

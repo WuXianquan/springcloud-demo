@@ -1,14 +1,21 @@
 package com.study.demo.order.service.impl;
 
 import com.study.demo.common.domain.Product;
+import com.study.demo.common.dto.ProductDTO;
 import com.study.demo.common.enums.OrderExceptionEnum;
 import com.study.demo.common.exception.ServiceException;
 import com.study.demo.common.util.IDGenerator;
+import com.study.demo.common.util.PageHelper;
 import com.study.demo.order.repository.ProductRepository;
 import com.study.demo.order.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +31,15 @@ public class ProductServiceImpl implements ProductService {
     private ProductRepository productRepository;
 
     @Override
-    public List<Product> findProductList() {
-        return productRepository.findAll();
+    public PageHelper findProductList(PageHelper pageHelper) {
+        Page<Product> products = productRepository.findAll(pageHelper.pageable());
+        List<ProductDTO> productDTOS = new ArrayList<>();
+        products.getContent().forEach(product -> {
+            productDTOS.add(new ProductDTO(product));
+        });
+        pageHelper.queryResult(products);
+        pageHelper.setData(productDTOS);
+        return pageHelper;
     }
 
     @Override
