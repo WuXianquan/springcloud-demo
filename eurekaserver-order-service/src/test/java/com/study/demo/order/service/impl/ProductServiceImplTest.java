@@ -41,7 +41,7 @@ public class ProductServiceImplTest {
         product.setPrice(new BigDecimal(79.5));
         product.setStock(30L);
         product.setFrozenStock(0L);
-        product.setStatus(ProductStatusEnum.on_line.getCode());
+        product.setStatus(ProductStatusEnum.ON_LINE.getCode());
         productService.createProduct(product);
         Assert.assertNotNull(product.getId());
     }

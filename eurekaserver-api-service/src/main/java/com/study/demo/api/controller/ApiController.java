@@ -12,6 +12,7 @@ import com.study.demo.common.vo.TokenVO;
 import com.study.demo.common.exception.ServiceException;
 import com.study.demo.common.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -68,9 +69,20 @@ public class ApiController {
      * @return
      */
     @UserLoginToken
-    @GetMapping(value = "/product/list")
+    @GetMapping(value = "/product/list", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public PageHelper listProduct(@RequestBody PageHelper pageHelper) {
         return openService.listProduct(pageHelper);
+    }
+
+    /**
+     * 查询在架商品列表
+     *
+     * @return
+     */
+    @UserLoginToken
+    @GetMapping(value = "/product/listOnLine", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PageHelper listOnLineProduct(@RequestBody PageHelper pageHelper) {
+        return openService.listOnLineProduct(pageHelper);
     }
 
 

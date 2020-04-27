@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
 
@@ -39,6 +40,15 @@ public class PageHelper {
      */
     public Pageable pageable() {
         return PageRequest.of(page - 1, size);
+    }
+
+    /**
+     * 构造分页查询参数pageable
+     * @param sort 排序规则
+     * @return
+     */
+    public Pageable pageable(Sort sort) {
+        return PageRequest.of(page - 1, size, sort);
     }
 
     /**

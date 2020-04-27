@@ -7,7 +7,6 @@ import com.study.demo.api.service.UserFeignService;
 import com.study.demo.api.util.RedisUtil;
 import com.study.demo.common.consts.TokenConst;
 import com.study.demo.common.domain.Order;
-import com.study.demo.common.domain.Product;
 import com.study.demo.common.domain.User;
 import com.study.demo.common.dto.UserDTO;
 import com.study.demo.common.enums.ResponseEnum;
@@ -23,7 +22,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -76,29 +74,8 @@ public class OpenServiceImpl implements OpenService {
 
         // token做redis缓存处理
         TokenVO tokenVO = MapUtil.convertToBean(result.getBody(), TokenVO.class);
-        redisUtil.setForTimeS(reKey, tokenVO.getToken(), tokenVO.getExpireTime() - 3);
+        redisUtil.setForTimeS(reKey, tokenVO.getToken(), tokenVO.getExpireTime() - 1);
         return tokenVO;
-    }
-
-    @Override
-    @LcnTransaction
-    public Order createOrder(Order order) {
-        ApiRepsonseResult result = orderFeignService.createOrder(order);
-        if (result.getCode().intValue() != ResponseEnum.SUCCESS.getCode().intValue()) {
-            throw new ServiceException(result);
-        }
-        order = MapUtil.convertToBean(result.getBody(), Order.class);
-        if (order.getId() == null) {
-            throw new ServiceException(OrderExceptionEnum.create_order_error.getCode(),
-                    OrderExceptionEnum.create_order_error.getMsg());
-        }
-        // 扣减用户积分
-        int ret = userFeignService.reduceUserScore(order.getUserId(), order.getOrderAmount());
-        if (ret != 1) {
-            throw new ServiceException(OrderExceptionEnum.reduce_user_socre_error.getCode(),
-                    OrderExceptionEnum.reduce_user_socre_error.getMsg());
-        }
-        return order;
     }
 
     @Override
@@ -117,6 +94,14 @@ public class OpenServiceImpl implements OpenService {
         return pageHelper;
     }
 
+    @Override
+    public PageHelper listOnLineProduct(PageHelper pageHelper) {
+        ApiRepsonseResult result = orderFeignService.listProduct(pageHelper);
+        checkServiceResultCode(result);
+        pageHelper = MapUtil.convertToBean(result.getBody(), PageHelper.class);
+        return pageHelper;
+    }
+
     /**
      * 检查远程API接口返回值状态码
      * @param result
@@ -125,5 +110,26 @@ public class OpenServiceImpl implements OpenService {
         if (result.getCode().intValue() != ResponseEnum.SUCCESS.getCode().intValue()) {
             throw new ServiceException(result);
         }
+    }
+
+    @Override
+    @LcnTransaction
+    public Order createOrder(Order order) {
+        ApiRepsonseResult result = orderFeignService.createOrder(order);
+        if (result.getCode().intValue() != ResponseEnum.SUCCESS.getCode().intValue()) {
+            throw new ServiceException(result);
+        }
+        order = MapUtil.convertToBean(result.getBody(), Order.class);
+        if (order.getId() == null) {
+            throw new ServiceException(OrderExceptionEnum.CREATE_ORDER_ERROR.getCode(),
+                    OrderExceptionEnum.CREATE_ORDER_ERROR.getMsg());
+        }
+        // 扣减用户积分
+        int ret = userFeignService.reduceUserScore(order.getUserId(), order.getOrderAmount());
+        if (ret != 1) {
+            throw new ServiceException(OrderExceptionEnum.REDUCE_USER_SOCRE_ERROR.getCode(),
+                    OrderExceptionEnum.REDUCE_USER_SOCRE_ERROR.getMsg());
+        }
+        return order;
     }
 }

@@ -2,6 +2,7 @@ package com.study.demo.order.repository;
 
 import com.study.demo.common.domain.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Repository;
  * @Description:
  */
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor {
 
     @Modifying
     @Query(value = "update t_product set stock = stock - :amount, frozen_stock = frozen_stock + :amount where id = :id and stock >= :amount", nativeQuery = true)

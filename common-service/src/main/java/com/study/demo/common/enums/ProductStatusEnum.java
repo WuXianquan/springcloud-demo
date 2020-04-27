@@ -12,8 +12,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ProductStatusEnum {
 
-    on_line(1, "在架"),
-    out_line(0, "下架");
+    ON_LINE(1, "在架"),
+    OUT_LINE(0, "下架");
 
     private Integer code;
     private String msg;

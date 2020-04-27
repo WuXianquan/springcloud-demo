@@ -57,16 +57,16 @@ public class OrderServiceImpl implements OrderService {
             long productNumber = detail.getProductNumber();
             Product product = productService.findProductById(productId);
             if (product == null) {
-                throw new ServiceException(OrderExceptionEnum.product_no_exits.getCode(), OrderExceptionEnum.product_no_exits.getMsg());
+                throw new ServiceException(OrderExceptionEnum.PRODUCT_NO_EXITS.getCode(), OrderExceptionEnum.PRODUCT_NO_EXITS.getMsg());
             }
-            if (product.getStatus().intValue() != ProductStatusEnum.on_line.getCode().intValue()) {
-                throw new ServiceException(OrderExceptionEnum.product_no_sell.getCode(), OrderExceptionEnum.product_no_sell.getMsg());
+            if (product.getStatus().intValue() != ProductStatusEnum.ON_LINE.getCode().intValue()) {
+                throw new ServiceException(OrderExceptionEnum.PRODUCT_NO_SELL.getCode(), OrderExceptionEnum.PRODUCT_NO_SELL.getMsg());
             }
 
             // 预扣库存(订单完成之后预补回来)
             int ret = productService.reduceProductStock(productId, productNumber);
             if (ret != 1) {
-                throw new ServiceException(OrderExceptionEnum.product_amount_error.getCode(), OrderExceptionEnum.product_amount_error.getMsg());
+                throw new ServiceException(OrderExceptionEnum.PRODUCT_AMOUNT_ERROR.getCode(), OrderExceptionEnum.PRODUCT_AMOUNT_ERROR.getMsg());
             }
             // 计算明细
             long detailId = IDGenerator.getInstance().next();

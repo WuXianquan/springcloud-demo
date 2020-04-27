@@ -17,12 +17,15 @@ import org.springframework.web.bind.annotation.*;
 
 public interface OrderFeignService {
 
+    @GetMapping(value = "/product/list")
+    ApiRepsonseResult listProduct(@RequestParam @RequestBody PageHelper pageHelper);
+
+    @GetMapping(value = "/product/listOnLine")
+    ApiRepsonseResult listOnLineProduct(PageHelper pageHelper);
+
     @GetMapping(value = "/order/userOrder/{userId}")
     ApiRepsonseResult findUserAllOrderInfo(@PathVariable("userId") Long useId);
 
     @PostMapping(value = "/order/createOrder")
     ApiRepsonseResult createOrder(@RequestBody Order order);
-
-    @GetMapping(value = "/product/list")
-    ApiRepsonseResult listProduct(@RequestBody PageHelper pageHelper);
 }

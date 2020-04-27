@@ -14,6 +14,8 @@ import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import java.util.LinkedHashMap;
+
 /**
  * @Author: Lon
  * @Date: 2020/4/16 14:14
@@ -65,6 +67,13 @@ public class ResponseDataAdvice implements ResponseBodyAdvice<Object> {
         if (o instanceof String) {
             return JSON.toJSONString(ApiRepsonseResult.ofSuccess(o));
         }
+        // 请求400错误处理
+        if (o instanceof LinkedHashMap) {
+            if (((LinkedHashMap) o).get("status").equals(400)) {
+                throw new RuntimeException("请求失败");
+            }
+        }
+
         return ApiRepsonseResult.ofSuccess(o);
     }
 

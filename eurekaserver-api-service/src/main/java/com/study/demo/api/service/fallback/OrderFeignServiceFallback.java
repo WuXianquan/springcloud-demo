@@ -18,19 +18,25 @@ public class OrderFeignServiceFallback implements OrderFeignService {
 
     @Override
     public ApiRepsonseResult findUserAllOrderInfo(Long useId) {
-        log.error("远程调用[findUserAllOrderInfo]失败, userId = {}", useId);
+        log.error("远程调用[/order/userOrder/{userId}]失败, userId = {}", useId);
         return ApiRepsonseResult.ofServiceFusesFail();
     }
 
     @Override
     public ApiRepsonseResult createOrder(Order order) {
-        log.error("远程调用[createOrder]失败, userId = {}", order.getUserId());
+        log.error("远程调用[/order/createOrder]失败, userId = {}", order.getUserId());
         return ApiRepsonseResult.ofServiceFusesFail();
     }
 
     @Override
     public ApiRepsonseResult listProduct(PageHelper pageHelper) {
-        log.error("远程调用[listProduct]失败");
+        log.error("远程调用[/product/list]失败");
+        return ApiRepsonseResult.ofServiceFusesFail();
+    }
+
+    @Override
+    public ApiRepsonseResult listOnLineProduct(PageHelper pageHelper) {
+        log.error("远程调用[/product/listOnLine]失败");
         return ApiRepsonseResult.ofServiceFusesFail();
     }
 }

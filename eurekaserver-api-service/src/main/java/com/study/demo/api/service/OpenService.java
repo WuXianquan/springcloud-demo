@@ -22,4 +22,6 @@ public interface OpenService {
     UserDTO findUserById(Long userId);
 
     PageHelper listProduct(PageHelper pageHelper);
+
+    PageHelper listOnLineProduct(PageHelper pageHelper);
 }

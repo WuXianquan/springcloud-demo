@@ -1,4 +1,4 @@
-create database if not exists `springcloud_demo` default charset utf8 collate utf8_general_ci;
+create database if not exists `sell` default charset utf8 collate utf8_general_ci;
 
 SET foreign_key_checks = 0;
 -- ----------------------------
