@@ -17,12 +17,12 @@
     </parent>
 
     <modules>
-        <module>eurekaserver-center-service</module>
-        <module>eurekaserver-order-service</module>
-        <module>eurekaserver-user-service</module>
-        <module>eurekaserver-api-service</module>
-        <module>common-service</module>
-        <module>gateway-service</module>
+        <module>eureka</module>
+        <module>order</module>
+        <module>user</module>
+        <module>api</module>
+        <module>common</module>
+        <module>gateway</module>
     </modules>
 
     <properties>

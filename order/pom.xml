@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.study.demo</groupId>
-    <artifactId>eurekaserver-order-service</artifactId>
+    <artifactId>order</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
@@ -14,13 +14,13 @@
         <version>1.0.0</version>
     </parent>
 
-    <name>eurekaserver-order-service</name>
+    <name>order</name>
     <description>订单服务</description>
 
     <dependencies>
         <dependency>
             <groupId>com.study.demo</groupId>
-            <artifactId>common-service</artifactId>
+            <artifactId>common</artifactId>
             <version>1.0.0</version>
         </dependency>
 
