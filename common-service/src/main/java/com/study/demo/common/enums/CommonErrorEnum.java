@@ -9,7 +9,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum CommonErrorCode {
+public enum CommonErrorEnum {
 
     /**
      * 404 Web 服务器找不到您所请求的文件或脚本。请检查URL 以确保路径正确。

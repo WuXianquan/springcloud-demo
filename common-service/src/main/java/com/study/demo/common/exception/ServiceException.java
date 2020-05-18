@@ -1,6 +1,6 @@
 package com.study.demo.common.exception;
 
-import com.study.demo.common.enums.CommonErrorCode;
+import com.study.demo.common.enums.CommonErrorEnum;
 import com.study.demo.common.response.ApiRepsonseResult;
 import lombok.*;
 
@@ -25,12 +25,12 @@ public class ServiceException extends RuntimeException {
     public ServiceException(Integer code){
         super();
         this.code = code;
-        this.msg = CommonErrorCode.BUSINESS_ERROR.getMsg();
+        this.msg = CommonErrorEnum.BUSINESS_ERROR.getMsg();
     }
 
     public ServiceException(String msg){
         super(msg);
-        this.code = CommonErrorCode.BUSINESS_ERROR.getCode();
+        this.code = CommonErrorEnum.BUSINESS_ERROR.getCode();
         this.msg = msg;
     }
 

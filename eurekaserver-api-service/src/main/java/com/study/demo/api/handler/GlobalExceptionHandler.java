@@ -1,23 +1,22 @@
 package com.study.demo.api.handler;
 
 import com.netflix.client.ClientException;
-import com.study.demo.common.enums.CommonErrorCode;
+import com.study.demo.common.enums.CommonErrorEnum;
 import com.study.demo.common.exception.ServiceException;
 import com.study.demo.common.response.ApiRepsonseResult;
 import feign.FeignException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
-import java.util.Set;
 
 /**
  * @Author: Lon
@@ -34,8 +33,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = NoHandlerFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiRepsonseResult handlerNoHandlerFoundException(NoHandlerFoundException exception) {
-        outPutErrorWarn(NoHandlerFoundException.class, CommonErrorCode.NOT_FOUND, exception);
-        return new ApiRepsonseResult(CommonErrorCode.NOT_FOUND.getCode(), CommonErrorCode.NOT_FOUND.getMsg());
+        outPutErrorWarn(NoHandlerFoundException.class, CommonErrorEnum.NOT_FOUND, exception);
+        return new ApiRepsonseResult(CommonErrorEnum.NOT_FOUND.getCode(), CommonErrorEnum.NOT_FOUND.getMsg());
     }
 
     /**
@@ -45,8 +44,8 @@ public class GlobalExceptionHandler {
     public ApiRepsonseResult handlerHttpRequestMethodNotSupportedException(
             HttpRequestMethodNotSupportedException exception) {
         outPutErrorWarn(HttpRequestMethodNotSupportedException.class,
-                CommonErrorCode.METHOD_NOT_ALLOWED, exception);
-        return new ApiRepsonseResult(CommonErrorCode.METHOD_NOT_ALLOWED.getCode(), CommonErrorCode.METHOD_NOT_ALLOWED.getMsg());
+                CommonErrorEnum.METHOD_NOT_ALLOWED, exception);
+        return new ApiRepsonseResult(CommonErrorEnum.METHOD_NOT_ALLOWED.getCode(), CommonErrorEnum.METHOD_NOT_ALLOWED.getMsg());
     }
 
     /**
@@ -56,8 +55,8 @@ public class GlobalExceptionHandler {
     public ApiRepsonseResult handlerHttpMediaTypeNotSupportedException(
             HttpMediaTypeNotSupportedException exception) {
         outPutErrorWarn(HttpMediaTypeNotSupportedException.class,
-                CommonErrorCode.UNSUPPORTED_MEDIA_TYPE, exception);
-        return new ApiRepsonseResult(CommonErrorCode.UNSUPPORTED_MEDIA_TYPE.getCode(), CommonErrorCode.UNSUPPORTED_MEDIA_TYPE.getMsg());
+                CommonErrorEnum.UNSUPPORTED_MEDIA_TYPE, exception);
+        return new ApiRepsonseResult(CommonErrorEnum.UNSUPPORTED_MEDIA_TYPE.getCode(), CommonErrorEnum.UNSUPPORTED_MEDIA_TYPE.getMsg());
     }
 
     /**
@@ -79,7 +78,7 @@ public class GlobalExceptionHandler {
         if (cause instanceof FeignException) {
             return handlerFeignException((FeignException) cause);
         }
-        outPutError(Exception.class, CommonErrorCode.EXCEPTION, throwable);
+        outPutError(Exception.class, CommonErrorEnum.EXCEPTION, throwable);
         return ApiRepsonseResult.ofFail();
     }
 
@@ -88,8 +87,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = FeignException.class)
     public ApiRepsonseResult handlerFeignException(FeignException e) {
-        outPutError(FeignException.class, CommonErrorCode.RPC_ERROR, e);
-        return new ApiRepsonseResult(CommonErrorCode.RPC_ERROR.getCode(), CommonErrorCode.RPC_ERROR.getMsg());
+        outPutError(FeignException.class, CommonErrorEnum.RPC_ERROR, e);
+        return new ApiRepsonseResult(CommonErrorEnum.RPC_ERROR.getCode(), CommonErrorEnum.RPC_ERROR.getMsg());
     }
 
     /**
@@ -97,8 +96,8 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = ClientException.class)
     public ApiRepsonseResult handlerClientException(ClientException e) {
-        outPutError(ClientException.class, CommonErrorCode.RPC_ERROR, e);
-        return new ApiRepsonseResult(CommonErrorCode.RPC_ERROR.getCode(), CommonErrorCode.RPC_ERROR.getMsg());
+        outPutError(ClientException.class, CommonErrorEnum.RPC_ERROR, e);
+        return new ApiRepsonseResult(CommonErrorEnum.RPC_ERROR.getCode(), CommonErrorEnum.RPC_ERROR.getMsg());
     }
 
     /**
@@ -106,40 +105,22 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = ServiceException.class)
     public ApiRepsonseResult handlerBusinessException(ServiceException e) {
-        outPutError(ServiceException.class, CommonErrorCode.BUSINESS_ERROR, e);
+        outPutError(ServiceException.class, CommonErrorEnum.BUSINESS_ERROR, e);
         return new ApiRepsonseResult(e.getCode(), e.getMsg());
     }
 
     /**
-     * HttpMessageNotReadableException 参数错误异常
+     * API controller请求参数校验不通过异常 捕获
+     *
+     * @param e
+     * @return
      */
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ApiRepsonseResult handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        outPutError(HttpMessageNotReadableException.class, CommonErrorCode.PARAM_ERROR, e);
-        String msg = String.format("%s : 错误详情( %s )", CommonErrorCode.PARAM_ERROR.getMsg(),
-                e.getRootCause().getMessage());
-        return new ApiRepsonseResult(CommonErrorCode.PARAM_ERROR.getCode(), msg);
-    }
-
-    /**
-     * ConstraintViolationException 参数错误异常
-     */
-    @ExceptionHandler(ConstraintViolationException.class)
-    public ApiRepsonseResult handleConstraintViolationException(ConstraintViolationException ex) {
-        String smg = "";
-        Set<ConstraintViolation<?>> constraintViolations = ex.getConstraintViolations();
-        if (log.isDebugEnabled()) {
-            for (ConstraintViolation error : constraintViolations) {
-                log.error("{} -> {}", error.getPropertyPath(), error.getMessageTemplate());
-                smg = error.getMessageTemplate();
-            }
-        }
-
-        if (constraintViolations.isEmpty()) {
-            log.error("validExceptionHandler error fieldErrors is empty");
-            new ApiRepsonseResult(CommonErrorCode.BUSINESS_ERROR.getCode(), "");
-        }
-        return new ApiRepsonseResult(CommonErrorCode.PARAM_ERROR.getCode(), smg);
+    @ResponseBody
+    @ExceptionHandler(value = MethodArgumentNotValidException.class)
+    public ApiRepsonseResult exceptionHandler(MethodArgumentNotValidException e) {
+        BindingResult bindingResult = e.getBindingResult();
+        return new ApiRepsonseResult(CommonErrorEnum.PARAM_ERROR.getCode(), bindingResult.getFieldErrors()
+                .get(0).getDefaultMessage());
     }
 
 

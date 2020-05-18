@@ -26,8 +26,11 @@ public interface UserFeignService {
     @PostMapping(value = "user/login")
     ApiRepsonseResult login(UserVO userVO);
 
-    @GetMapping(value = "user/userInfo/{id}")
+    @GetMapping(value = "user/userInfo/id/{id}")
     ApiRepsonseResult findUserById(@PathVariable("id") Long userId);
+
+    @GetMapping(value = "user/userInfo/username/{username}")
+    ApiRepsonseResult findUserByUsername(@PathVariable("username") String username);
 
     @PostMapping(value = "user/reduceUserScore")
     Integer reduceUserScore(@RequestParam("id") Long id, @RequestParam("score") BigDecimal score);

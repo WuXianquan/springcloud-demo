@@ -8,11 +8,14 @@ import com.study.demo.api.service.OrderFeignService;
 import com.study.demo.common.domain.OrderDetail;
 import com.study.demo.common.dto.UserDTO;
 import com.study.demo.common.util.PageHelper;
+import com.study.demo.common.validate.Login;
+import com.study.demo.common.validate.Register;
 import com.study.demo.common.vo.TokenVO;
 import com.study.demo.common.exception.ServiceException;
 import com.study.demo.common.vo.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -35,7 +38,7 @@ public class ApiController {
 
     @PassToken
     @PostMapping(value = "/register")
-    public TokenVO register(@RequestBody UserVO userVO) {
+    public TokenVO register(@RequestBody @Validated(value = {Register.class}) UserVO userVO) {
         return openService.register(userVO);
     }
 
@@ -47,20 +50,32 @@ public class ApiController {
      */
     @PassToken
     @PostMapping(value = "/login")
-    public TokenVO login(@RequestBody UserVO userVO) {
+    public TokenVO login(@RequestBody @Validated(value = {Login.class}) UserVO userVO) {
         return openService.login(userVO);
     }
 
     /**
      * 查询用户个人信息
      *
-     * @param userId
+     * @param userId 用户ID
      * @return
      */
     @UserLoginToken
-    @GetMapping(value = "/user/{userId}")
+    @GetMapping(value = "/user/id/{userId}")
     public UserDTO userInfo(@PathVariable("userId") Long userId) {
         return openService.findUserById(userId);
+    }
+
+    /**
+     * 查询用户个人信息
+     *
+     * @param username 用户名
+     * @return
+     */
+    @UserLoginToken
+    @GetMapping(value = "/user/username/{username}")
+    public UserDTO userInfo(@PathVariable("username") String username) {
+        return openService.findUserByUsername(username);
     }
 
     /**

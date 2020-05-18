@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.codingapi.txlcn.tc.annotation.LcnTransaction;
 import com.study.demo.common.consts.TokenConst;
 import com.study.demo.common.domain.User;
+import com.study.demo.common.enums.CommonErrorEnum;
 import com.study.demo.common.util.IDGenerator;
 import com.study.demo.common.vo.TokenVO;
 import com.study.demo.common.enums.UserExceptionEnum;
@@ -52,6 +53,10 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(UserExceptionEnum.USERNAME_IS_USED.getCode(), UserExceptionEnum.USERNAME_IS_USED.getMsg());
         }
 
+        if (!userVO.getPassword().equals(userVO.getCheckPassword())) {
+            throw new ServiceException(CommonErrorEnum.PARAM_ERROR.getCode(), CommonErrorEnum.PARAM_ERROR.getMsg());
+        }
+
         User newUser = new User();
         newUser.setId(IDGenerator.getInstance().next());
         newUser.setUsername(userVO.getUsername());
@@ -66,9 +71,6 @@ public class UserServiceImpl implements UserService {
         TokenVO tokenVO = new TokenVO();
         tokenVO.setToken(token);
         tokenVO.setExpireTime(TokenConst.TOKEN_REDISKEY_EXPIRETIME);
-
-        // 存入redis
-        redisUtil.setForTimeS(key, token, TokenConst.TOKEN_REDISKEY_EXPIRETIME);
         return tokenVO;
     }
 
@@ -79,10 +81,12 @@ public class UserServiceImpl implements UserService {
         String rt = redisUtil.get(key);
         if (rt != null) {
             Long expireTime = redisUtil.getExpire(key, TimeUnit.SECONDS);
-            if (expireTime > 3) { // 保留3秒做缓冲
+            if (expireTime > 0) {
+                // 刷新token时长
                 TokenVO tokenVO = new TokenVO();
                 tokenVO.setToken(rt);
-                tokenVO.setExpireTime(expireTime);
+                tokenVO.setExpireTime(TokenConst.TOKEN_REDISKEY_EXPIRETIME);
+                redisUtil.setForTimeS(key, rt, TokenConst.TOKEN_REDISKEY_EXPIRETIME);
                 return tokenVO;
             }
         }
@@ -123,7 +127,7 @@ public class UserServiceImpl implements UserService {
         if (user == null) {
             throw new ServiceException(UserExceptionEnum.USER_NO_EXITS.getCode(), UserExceptionEnum.USER_NO_EXITS.getMsg());
         }
-        return userRepository.findUserByUsername(username);
+        return user;
     }
 
     @Override

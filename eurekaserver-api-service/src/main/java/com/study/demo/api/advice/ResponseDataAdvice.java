@@ -3,6 +3,7 @@ package com.study.demo.api.advice;
 import com.alibaba.fastjson.JSON;
 import com.study.demo.api.annotation.IgnorReponseAdvice;
 import com.study.demo.api.config.FilterConfig;
+import com.study.demo.common.enums.CommonErrorEnum;
 import com.study.demo.common.response.ApiRepsonseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -55,6 +56,18 @@ public class ResponseDataAdvice implements ResponseBodyAdvice<Object> {
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType,
                                   Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest,
                                   ServerHttpResponse serverHttpResponse) {
+
+        // 请求400/404错误处理
+        if (o instanceof LinkedHashMap) {
+            int code = (int) ((LinkedHashMap) o).get("status");
+            if (code == CommonErrorEnum.BUSINESS_ERROR.getCode().intValue()) {
+                return new ApiRepsonseResult(CommonErrorEnum.BUSINESS_ERROR.getCode(), CommonErrorEnum.BUSINESS_ERROR.getMsg());
+            }
+            if (code == CommonErrorEnum.NOT_FOUND.getCode().intValue()) {
+                return new ApiRepsonseResult(CommonErrorEnum.NOT_FOUND.getCode(), CommonErrorEnum.NOT_FOUND.getMsg());
+            }
+        }
+
         // o is null -> return response
         if (o == null) {
             return ApiRepsonseResult.ofSuccess();
@@ -67,13 +80,6 @@ public class ResponseDataAdvice implements ResponseBodyAdvice<Object> {
         if (o instanceof String) {
             return JSON.toJSONString(ApiRepsonseResult.ofSuccess(o));
         }
-        // 请求400错误处理
-        if (o instanceof LinkedHashMap) {
-            if (((LinkedHashMap) o).get("status").equals(400)) {
-                throw new RuntimeException("请求失败");
-            }
-        }
-
         return ApiRepsonseResult.ofSuccess(o);
     }
 

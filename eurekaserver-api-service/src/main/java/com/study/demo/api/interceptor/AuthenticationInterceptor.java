@@ -11,7 +11,7 @@ import com.study.demo.api.service.UserFeignService;
 import com.study.demo.api.util.RedisUtil;
 import com.study.demo.common.consts.TokenConst;
 import com.study.demo.common.domain.User;
-import com.study.demo.common.enums.CommonErrorCode;
+import com.study.demo.common.enums.CommonErrorEnum;
 import com.study.demo.common.enums.ResponseEnum;
 import com.study.demo.common.enums.UserExceptionEnum;
 import com.study.demo.common.exception.ServiceException;
@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,7 +63,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             if (userLoginToken.required()) {
                 // 执行认证
                 if (token == null) {
-                    throw new ServiceException(CommonErrorCode.NO_LOGIN_ERROR.getCode(), CommonErrorCode.NO_LOGIN_ERROR.getMsg());
+                    throw new ServiceException(CommonErrorEnum.NO_LOGIN_ERROR.getCode(), CommonErrorEnum.NO_LOGIN_ERROR.getMsg());
                 }
 
                 // 获取token中的 userId
@@ -72,18 +71,14 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 try {
                     userId = JWT.decode(token).getAudience().get(0);
                 } catch (JWTDecodeException j) {
-                    throw new ServiceException(CommonErrorCode.ILLEGAL_REQUEST.getCode(), CommonErrorCode.ILLEGAL_REQUEST.getMsg());
+                    throw new ServiceException(CommonErrorEnum.ILLEGAL_REQUEST.getCode(), CommonErrorEnum.ILLEGAL_REQUEST.getMsg());
                 }
 
                 // redis校验token
                 String redisKey = TokenConst.TOKEN_REDISKEY_PRE_ID + userId;
                 String rt = redisUtil.get(redisKey);
                 if (rt != null) {
-                    if (token.equals(rt)) {
-                        return true;
-                    } else {
-                        throw new ServiceException(CommonErrorCode.ILLEGAL_REQUEST.getCode(), CommonErrorCode.ILLEGAL_REQUEST.getMsg());
-                    }
+                    return true;
                 }
 
                 ApiRepsonseResult result = userFeignService.findUserById(Long.valueOf(userId));
@@ -102,7 +97,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                     jwtVerifier.verify(token);
                 } catch (JWTVerificationException e) {
                     log.error("JWT token校验不通过, token = {}", token);
-                    throw new ServiceException(CommonErrorCode.ILLEGAL_REQUEST.getCode(), CommonErrorCode.ILLEGAL_REQUEST.getMsg());
+                    throw new ServiceException(CommonErrorEnum.ILLEGAL_REQUEST.getCode(), CommonErrorEnum.ILLEGAL_REQUEST.getMsg());
                 }
                 Long expireTime = redisUtil.getExpire(TokenConst.TOKEN_REDISKEY_PRE_USERNAME + user.getUsername(), TimeUnit.SECONDS);
                 if (expireTime != null && expireTime > 0) {
@@ -112,16 +107,5 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
             }
         }
         return true;
-    }
-
-    @Override
-    public void postHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                           Object o, ModelAndView modelAndView) {
-
-    }
-
-    @Override
-    public void afterCompletion(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                                Object o, Exception e) {
     }
 }

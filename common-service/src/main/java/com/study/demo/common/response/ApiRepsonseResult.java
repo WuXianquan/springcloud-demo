@@ -1,6 +1,6 @@
 package com.study.demo.common.response;
 
-import com.study.demo.common.enums.CommonErrorCode;
+import com.study.demo.common.enums.CommonErrorEnum;
 import com.study.demo.common.enums.ResponseEnum;
 import com.study.demo.common.util.IDGenerator;
 import lombok.*;
@@ -53,15 +53,16 @@ public class ApiRepsonseResult implements Serializable {
         return new ApiRepsonseResult(ResponseEnum.FAIL.getCode(), ResponseEnum.FAIL.getMsg());
     }
 
-    public static ApiRepsonseResult ofFail(Object body) {
-        return new ApiRepsonseResult(ResponseEnum.FAIL.getCode(), ResponseEnum.FAIL.getMsg(), body);
+    public static ApiRepsonseResult ofFail(String msg) {
+        return new ApiRepsonseResult(ResponseEnum.FAIL.getCode(), msg, null);
     }
 
     /**
      * 服务熔断
+     *
      * @return
      */
     public static ApiRepsonseResult ofServiceFusesFail() {
-        return new ApiRepsonseResult(CommonErrorCode.SERVICE_FUSES_ERROR.getCode(), CommonErrorCode.SERVICE_FUSES_ERROR.getMsg());
+        return new ApiRepsonseResult(CommonErrorEnum.SERVICE_FUSES_ERROR.getCode(), CommonErrorEnum.SERVICE_FUSES_ERROR.getMsg());
     }
 }

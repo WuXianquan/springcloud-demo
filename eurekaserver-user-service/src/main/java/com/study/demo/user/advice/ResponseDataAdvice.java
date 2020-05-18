@@ -1,6 +1,7 @@
 package com.study.demo.user.advice;
 
 import com.alibaba.fastjson.JSON;
+import com.study.demo.common.enums.CommonErrorEnum;
 import com.study.demo.common.response.ApiRepsonseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
@@ -11,6 +12,8 @@ import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+
+import java.util.LinkedHashMap;
 
 /**
  * @Author: Lon
@@ -45,6 +48,18 @@ public class ResponseDataAdvice implements ResponseBodyAdvice<Object> {
     public Object beforeBodyWrite(Object o, MethodParameter methodParameter, MediaType mediaType,
                                   Class<? extends HttpMessageConverter<?>> aClass, ServerHttpRequest serverHttpRequest,
                                   ServerHttpResponse serverHttpResponse) {
+        // 请求400/404错误处理
+        if (o instanceof LinkedHashMap) {
+            int code = (int) ((LinkedHashMap) o).get("status");
+            if (code == CommonErrorEnum.BUSINESS_ERROR.getCode().intValue()) {
+                return new ApiRepsonseResult(CommonErrorEnum.BUSINESS_ERROR.getCode(), CommonErrorEnum.BUSINESS_ERROR.getMsg());
+            }
+            if (code == CommonErrorEnum.NOT_FOUND.getCode().intValue()) {
+                return new ApiRepsonseResult(CommonErrorEnum.NOT_FOUND.getCode(), CommonErrorEnum.NOT_FOUND.getMsg());
+            }
+        }
+
+
         // o is null -> return response
         if (o == null) {
             return ApiRepsonseResult.ofSuccess();

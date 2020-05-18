@@ -87,6 +87,14 @@ public class OpenServiceImpl implements OpenService {
     }
 
     @Override
+    public UserDTO findUserByUsername(String username) {
+        ApiRepsonseResult result = userFeignService.findUserByUsername(username);
+        checkServiceResultCode(result);
+        User user = MapUtil.convertToBean(result.getBody(), User.class);
+        return new UserDTO(user);
+    }
+
+    @Override
     public PageHelper listProduct(PageHelper pageHelper) {
         ApiRepsonseResult result = orderFeignService.listProduct(pageHelper);
         checkServiceResultCode(result);

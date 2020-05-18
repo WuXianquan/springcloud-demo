@@ -36,6 +36,12 @@ public class UserFeignServiceFallback implements UserFeignService {
     }
 
     @Override
+    public ApiRepsonseResult findUserByUsername(String username) {
+        log.error("远程调用[findUserByUsername]失败, username = {}", username);
+        return ApiRepsonseResult.ofServiceFusesFail();
+    }
+
+    @Override
     public Integer reduceUserScore(Long id, BigDecimal score) {
         return null;
     }
