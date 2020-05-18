@@ -40,6 +40,10 @@ public class PrimaryConfig {
         source.setUrl(env.getRequiredProperty("spring.datasource.url"));
         source.setUsername(env.getRequiredProperty("spring.datasource.username"));
         source.setPassword(env.getRequiredProperty("spring.datasource.password"));
+        source.setValidationQuery("SELECT 1");
+        source.setTestOnBorrow(false);
+        source.setTestOnReturn(false);
+        source.setTestWhileIdle(true);
         return source;
     }
 

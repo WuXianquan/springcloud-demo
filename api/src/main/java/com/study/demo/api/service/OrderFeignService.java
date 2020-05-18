@@ -12,13 +12,11 @@ import org.springframework.web.bind.annotation.*;
  * @Date: 2019/6/12 16:19
  * @Description: 调用order服务基础接口
  */
-//@FeignClient(name = "order-service", fallback = OrderFeignServiceFallback.class)
-@FeignClient(name = "order-service", url = "127.0.0.1:8081", fallback = OrderFeignServiceFallback.class)
-
+@FeignClient(name = "order-service", fallback = OrderFeignServiceFallback.class)
 public interface OrderFeignService {
 
     @GetMapping(value = "/product/list")
-    ApiRepsonseResult listProduct(@RequestParam @RequestBody PageHelper pageHelper);
+    ApiRepsonseResult listProduct(@RequestBody PageHelper pageHelper);
 
     @GetMapping(value = "/product/listOnLine")
     ApiRepsonseResult listOnLineProduct(PageHelper pageHelper);

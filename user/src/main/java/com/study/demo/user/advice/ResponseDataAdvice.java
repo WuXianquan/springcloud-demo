@@ -1,6 +1,5 @@
 package com.study.demo.user.advice;
 
-import com.alibaba.fastjson.JSON;
 import com.study.demo.common.enums.CommonErrorEnum;
 import com.study.demo.common.response.ApiRepsonseResult;
 import lombok.extern.slf4j.Slf4j;
@@ -67,10 +66,6 @@ public class ResponseDataAdvice implements ResponseBodyAdvice<Object> {
         // o is instanceof ConmmonResponse -> return o
         if (o instanceof ApiRepsonseResult) {
             return o;
-        }
-        // string 特殊处理
-        if (o instanceof String) {
-            return JSON.toJSONString(ApiRepsonseResult.ofSuccess(o));
         }
         return ApiRepsonseResult.ofSuccess(o);
     }

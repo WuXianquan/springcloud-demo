@@ -3,6 +3,7 @@ package com.study.demo.api.config;
 import com.alibaba.druid.pool.DruidDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 
@@ -13,6 +14,7 @@ import javax.sql.DataSource;
  * @Date: 2019/6/18 17:49
  * @Description: 数据源基础类
  */
+@Configuration
 @PropertySource("classpath:application.yml")
 public class PrimaryConfig {
 
@@ -30,6 +32,10 @@ public class PrimaryConfig {
         source.setUrl(env.getRequiredProperty("spring.datasource.url"));
         source.setUsername(env.getRequiredProperty("spring.datasource.username"));
         source.setPassword(env.getRequiredProperty("spring.datasource.password"));
+        source.setValidationQuery("SELECT 1");
+        source.setTestOnBorrow(false);
+        source.setTestOnReturn(false);
+        source.setTestWhileIdle(true);
         return source;
     }
 }

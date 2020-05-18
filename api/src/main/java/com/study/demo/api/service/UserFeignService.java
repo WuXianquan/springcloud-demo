@@ -16,8 +16,7 @@ import java.math.BigDecimal;
  * @Date: 2019/6/19 15:04
  * @Description: 调用user服务基础接口
  */
-//@FeignClient(name = "user-service", fallback = UserFeignServiceFallback.class)
-@FeignClient(name = "user-service", url = "127.0.0.1:8082", fallback = UserFeignServiceFallback.class)
+@FeignClient(name = "user-service", fallback = UserFeignServiceFallback.class)
 public interface UserFeignService {
 
     @PostMapping(value = "user/register")

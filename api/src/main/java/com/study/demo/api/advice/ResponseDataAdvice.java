@@ -1,6 +1,5 @@
 package com.study.demo.api.advice;
 
-import com.alibaba.fastjson.JSON;
 import com.study.demo.api.annotation.IgnorReponseAdvice;
 import com.study.demo.api.config.FilterConfig;
 import com.study.demo.common.enums.CommonErrorEnum;
@@ -75,10 +74,6 @@ public class ResponseDataAdvice implements ResponseBodyAdvice<Object> {
         // feign降级处理返回类型为ApiRepsonseResult
         if (o instanceof ApiRepsonseResult) {
             return o;
-        }
-        // string 特殊处理
-        if (o instanceof String) {
-            return JSON.toJSONString(ApiRepsonseResult.ofSuccess(o));
         }
         return ApiRepsonseResult.ofSuccess(o);
     }
