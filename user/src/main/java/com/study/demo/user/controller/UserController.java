@@ -27,7 +27,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping(value = "/register")
-    public TokenVO register(@RequestBody @Validated(value = {Register.class}) UserVO userVO) {
+    public Long register(@RequestBody @Validated(value = {Register.class}) UserVO userVO) {
         return userService.register(userVO);
     }
 

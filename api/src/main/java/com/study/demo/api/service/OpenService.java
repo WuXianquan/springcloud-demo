@@ -13,7 +13,7 @@ import com.study.demo.common.vo.UserVO;
  */
 public interface OpenService {
 
-    TokenVO register(UserVO userVO);
+    Long register(UserVO userVO);
 
     TokenVO login(UserVO userVO);
 

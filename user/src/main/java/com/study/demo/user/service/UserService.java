@@ -18,7 +18,7 @@ public interface UserService {
      * @param userVO 用户参数
      * @return
      */
-    TokenVO register(UserVO userVO);
+    Long register(UserVO userVO);
 
     /**
      * 用户登录

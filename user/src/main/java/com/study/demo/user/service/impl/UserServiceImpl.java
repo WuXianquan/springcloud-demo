@@ -40,7 +40,11 @@ public class UserServiceImpl implements UserService {
     private RedisUtil redisUtil;
 
     @Override
-    public TokenVO register(UserVO userVO) {
+    public Long register(UserVO userVO) {
+        if (!userVO.getPassword().equals(userVO.getCheckPassword())) {
+            throw new ServiceException(CommonErrorEnum.PARAM_ERROR.getCode(), CommonErrorEnum.PARAM_ERROR.getMsg());
+        }
+
         // 校验用户合法性
         String key = TokenConst.TOKEN_REDISKEY_PRE_USERNAME + userVO.getUsername();
         String rt = redisUtil.get(key);
@@ -53,10 +57,6 @@ public class UserServiceImpl implements UserService {
             throw new ServiceException(UserExceptionEnum.USERNAME_IS_USED.getCode(), UserExceptionEnum.USERNAME_IS_USED.getMsg());
         }
 
-        if (!userVO.getPassword().equals(userVO.getCheckPassword())) {
-            throw new ServiceException(CommonErrorEnum.PARAM_ERROR.getCode(), CommonErrorEnum.PARAM_ERROR.getMsg());
-        }
-
         User newUser = new User();
         newUser.setId(IDGenerator.getInstance().next());
         newUser.setUsername(userVO.getUsername());
@@ -64,14 +64,8 @@ public class UserServiceImpl implements UserService {
         newUser.setScore(BigDecimal.ZERO);
         newUser.setStatus(UserStatusEnum.NORMAL.getCode());
         newUser.setCreateTime(new Timestamp(System.currentTimeMillis()));
-        userRepository.saveAndFlush(newUser);
-
-        // 生成token
-        String token = JWT.create().withAudience(String.valueOf(newUser.getId())).sign(Algorithm.HMAC256(newUser.getPassword()));
-        TokenVO tokenVO = new TokenVO();
-        tokenVO.setToken(token);
-        tokenVO.setExpireTime(TokenConst.TOKEN_REDISKEY_EXPIRETIME);
-        return tokenVO;
+        User u = userRepository.saveAndFlush(newUser);
+        return u.getId();
     }
 
     @Override

@@ -38,7 +38,7 @@ public class ApiController {
 
     @PassToken
     @PostMapping(value = "/register")
-    public TokenVO register(@RequestBody @Validated(value = {Register.class}) UserVO userVO) {
+    public Long register(@RequestBody @Validated(value = {Register.class}) UserVO userVO) {
         return openService.register(userVO);
     }
 

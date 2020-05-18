@@ -43,15 +43,10 @@ public class OpenServiceImpl implements OpenService {
     private RedisUtil redisUtil;
 
     @Override
-    public TokenVO register(UserVO userVO) {
+    public Long register(UserVO userVO) {
         ApiRepsonseResult result = userFeignService.register(userVO);
         checkServiceResultCode(result);
-
-        // token做redis缓存处理
-        TokenVO tokenVO = MapUtil.convertToBean(result.getBody(), TokenVO.class);
-        redisUtil.setForTimeS(TokenConst.TOKEN_REDISKEY_PRE_USERNAME + userVO.getUsername(), tokenVO.getToken(),
-                tokenVO.getExpireTime() - 3);
-        return tokenVO;
+        return (Long) result.getBody();
     }
 
     @Override
